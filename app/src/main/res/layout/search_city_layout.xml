@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp">
+
+            <ImageButton
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/back"
+                android:scaleX="0.5"
+                android:scaleY="0.5"
+
+                android:background="#00000000"/>
+
+            <EditText android:id="@+id/inputLocation"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="Input location..."
+                android:background="#00000000"
+                android:maxLines="1"
+                android:layout_marginRight="10dp"/>
+
+        </LinearLayout>
+
+        <AutoCompleteTextView android:id="@+id/hint"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:background="#00000000"/>
+
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>
