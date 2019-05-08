@@ -1,6 +1,7 @@
 package apt.tutorial.weatherforecastapp;
 
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 
@@ -24,9 +25,15 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ViewPortHandler;
+import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -36,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
     TextView currentTemp;
     TextView maxTemp;
     TextView minTemp;
-    ImageView iconCurrentState;
+    ImageView currentStateIcon;
     TextView currentDate;
     TextView currentCity;
     TextView currentState;
@@ -47,12 +54,22 @@ public class MainActivity extends AppCompatActivity {
     TextView dew_pointInfor;
     TextView pressureInfor;
 
+    RequestQueue requestQueue;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //map component in main.xml
         anhXa();
+        //config default internet
+//        if (android.os.Build.VERSION.SDK_INT > 9)
+//        {
+//            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+//            StrictMode.setThreadPolicy(policy);
+//        }
+
+        //get data from api
+        getCurrentData("Hanoi");
 
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setDisplayShowCustomEnabled(true);
@@ -84,42 +101,117 @@ public class MainActivity extends AppCompatActivity {
         des.setText("");
         mpLineChart.setDescription(des);
 
-    LineData data=new LineData(dataSets);
+        LineData data=new LineData(dataSets);
         data.setValueFormatter(new MyValueFormat());
         mpLineChart.setData(data);
         mpLineChart.invalidate();
 
-        //get data from api
-        getCurrentData("Hanoi");
+
 }
 
     private void getCurrentData(String city){
         Log.d("myLog","getting data");
-        RequestQueue requestQueue = Volley.newRequestQueue(MainActivity.this);
-        String url = "http://openweathermap.org/data/2.5/find?q="+city+"&units=metric&appid=b6907d289e10d714a6e88b30761fae22";
+        requestQueue = Volley.newRequestQueue(MainActivity.this);
+        String url = "https://api.openweathermap.org/data/2.5/weather?q="+city+"&units=metric&appid=a294d4f6615e3794f086c469c0258c7b";
         StringRequest stringRequest= new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Toast.makeText(MainActivity.this, "Getting data...", Toast.LENGTH_LONG).show();
-                        Log.d("myLog","getting data"+response);
+                        Log.d("myLog","getting data: "+response);
+                        try {
+                            JSONObject jsonObject =new JSONObject(response);
+
+                            String day = jsonObject.getString("dt");
+                            Long l = Long.valueOf(day);
+                            Date date = new Date(l * 1000L);
+
+                            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE, MMM d");
+                            String Date = simpleDateFormat.format(date);
+                            currentDate.setText(Date);
+
+                            String name = jsonObject.getString("name");
+                            currentCity.setText(name);
+
+                            JSONArray jsonArrayWeather = jsonObject.getJSONArray("weather");
+                            JSONObject jsonObjectWeather = jsonArrayWeather.getJSONObject(0);
+
+                            String status = jsonObjectWeather.getString("main");
+                            currentState.setText(status);
+
+                            String icon = jsonObjectWeather.getString("icon");
+                            Log.d("myLog", "onResponse: "+icon);
+                            Picasso.with(MainActivity.this).load("https://openweathermap.org/img/w/"
+                                    +icon+".png").into(currentStateIcon);
+
+                            JSONObject jsonObjectMain = jsonObject.getJSONObject("main");
+                            int temp = jsonObjectMain.getInt("temp");
+                            int pressure = jsonObjectMain.getInt("pressure");
+                            int temp_min = jsonObjectMain.getInt("temp_min");
+                            int temp_max = jsonObjectMain.getInt("temp_max");
+                            int humidity = jsonObjectMain.getInt("humidity");
+                            int visibility = jsonObject.getInt("visibility");
+
+                            currentTemp.setText(temp+"°C");
+                            minTemp.setText(temp_min+"°");
+                            maxTemp.setText(temp_max+"°");
+
+                            tempInfor.setText(temp+"°C");
+                            pressureInfor.setText(pressure+" mb");
+                            humidInfor.setText(humidity+"%");
+                            visibleInfor.setText((visibility/1000)+" km");
+
+                            JSONObject jsonObjectCoord = jsonObject.getJSONObject("coord");
+                            String lat = jsonObjectCoord.getString("lat");
+                            String lon = jsonObjectCoord.getString("lon");
+                            setUVInfor(Double.valueOf(lat),Double.valueOf(lon));
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(MainActivity.this, "Getting data error...", Toast.LENGTH_LONG).show();
+                        Log.d("myLog","getting data error");
                     }
                 });
         requestQueue.add(stringRequest);
 
     }
 
+    private void setUVInfor(double lat, double lon){
+        requestQueue = Volley.newRequestQueue(MainActivity.this);
+        String url = "https://api.openweathermap.org/data/2.5/uvi?lat="
+                +lat+"&lon="+lon+"&appid=a294d4f6615e3794f086c469c0258c7b&cnt=1";
+        StringRequest stringRequest= new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("myLog","uvInfor "+response);
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            double uv = jsonObject.getDouble("value");
+                            UVInfor.setText(uv+"");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.d("myLog","uvInfor fail");
+                        }
+                });
+        requestQueue.add(stringRequest);
+    }
+
     private void anhXa(){
         currentTemp = (TextView) findViewById(R.id.currentTemp);
         maxTemp = (TextView) findViewById(R.id.maxTemp);
         minTemp  = (TextView) findViewById(R.id.minTemp);
-        iconCurrentState  = (ImageView) findViewById(R.id.iconCurrentState);
+        currentStateIcon  = (ImageView) findViewById(R.id.currentStateIcon);
         currentDate  = (TextView) findViewById(R.id.currentDate);
         currentCity  = (TextView) findViewById(R.id.currentCity);
         currentState  = (TextView) findViewById(R.id.currentState);
