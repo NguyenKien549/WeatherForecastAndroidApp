@@ -77,27 +77,26 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:orientation="vertical">
 
-                <TextView
+                <TextView android:id="@+id/currentDate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="thu, january 4"
                     android:textAllCaps="true"
                     android:textSize="15dp" />
 
-                <TextView
+                <TextView android:id="@+id/currentCity"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Waco"
                     android:textSize="30dp"
                     android:textStyle="bold" />
 
-                <TextView
+                <TextView android:id="@+id/currentState"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:text="Clear"
@@ -125,38 +124,7 @@
                     android:layout_height="match_parent"
                     android:orientation="horizontal">
 
-                    <LinearLayout
-                        android:id="@+id/hourly_1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@color/colorGrey"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/hourlyTemp_1"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_horizontal"
-                            android:text="28*"
-                            android:textSize="18dp" />
-
-                        <ImageView
-                            android:id="@+id/iconState_1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="5dp"
-                            android:src="@drawable/ball_yellow" />
-
-                        <TextView
-                            android:id="@+id/hourlyTime_1"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_horizontal"
-                            android:text="24:00"
-                            android:textSize="18dp" />
-                    </LinearLayout>
-
-                    <ListView
+                    <ListView android:id="@+id/hourlyForecastList"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1" />
@@ -185,6 +153,7 @@
                         android:layout_height="wrap_content"
                         android:src="@drawable/arrow_right"
                         android:layout_marginLeft="240dp"
+
                         />
                 </LinearLayout>
 
@@ -286,7 +255,6 @@
                             android:src="@drawable/sun" />
 
                         <TextView
-
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_horizontal"
@@ -380,7 +348,6 @@
                         android:orientation="vertical">
 
                         <ImageView
-                            android:id="@+id/tempInforIcon"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
@@ -411,7 +378,6 @@
                         android:orientation="vertical">
 
                         <ImageView
-                            android:id="@+id/humidInforIcon"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
@@ -442,7 +408,6 @@
                         android:orientation="vertical">
 
                         <ImageView
-                            android:id="@+id/UVInforIcon"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
@@ -476,7 +441,6 @@
                         android:orientation="vertical">
 
                         <ImageView
-                            android:id="@+id/visibleInforIcon"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
@@ -507,7 +471,6 @@
                         android:orientation="vertical">
 
                         <ImageView
-                            android:id="@+id/dew-pointInforIcon"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
@@ -521,7 +484,7 @@
                             android:text="Điểm sương" />
 
                         <TextView
-                            android:id="@+id/dew-pointInfor"
+                            android:id="@+id/dew_pointInfor"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="3dp"
@@ -537,7 +500,6 @@
                         android:orientation="vertical">
 
                         <ImageView
-                            android:id="@+id/pressureInforIcon"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
