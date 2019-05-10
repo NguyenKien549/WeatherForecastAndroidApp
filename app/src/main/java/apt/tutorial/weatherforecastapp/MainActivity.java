@@ -54,6 +54,8 @@ public class MainActivity extends AppCompatActivity {
     TextView dew_pointInfor;
     TextView pressureInfor;
 
+    OneHourAdapter oneHourAdapter;
+
     RequestQueue requestQueue;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
