@@ -1,13 +1,12 @@
 package apt.tutorial.weatherforecastapp;
 
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 
-import android.graphics.Color;
 import android.util.Log;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,6 +54,8 @@ public class MainActivity extends AppCompatActivity {
     TextView pressureInfor;
 
     OneHourAdapter oneHourAdapter;
+    ArrayList<OneHourInfo> listModel = null;
+    ListView list24h;
 
     RequestQueue requestQueue;
     @Override
@@ -69,9 +70,11 @@ public class MainActivity extends AppCompatActivity {
 //            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 //            StrictMode.setThreadPolicy(policy);
 //        }
-
         //get data from api
         getCurrentData("Hanoi");
+
+        //get data 24h from api
+        get24hoursData("Hanoi");
 
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setDisplayShowCustomEnabled(true);
@@ -108,11 +111,63 @@ public class MainActivity extends AppCompatActivity {
         mpLineChart.setData(data);
         mpLineChart.invalidate();
 
-
+        // adapter
+        listModel = new ArrayList<>();
+        oneHourAdapter = new OneHourAdapter(MainActivity.this,R.layout.one_hour_temp,listModel);
+        list24h.setAdapter(oneHourAdapter);
 }
+
+    private void get24hoursData(String city) {
+        requestQueue = Volley.newRequestQueue(MainActivity.this);
+        String url = "https://api.openweathermap.org/data/2.5/forecast/hourly?q=" +city+
+                "&units=metric&appid=a294d4f6615e3794f086c469c0258c7b";
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("myLog","get data done 24h");
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+
+                            JSONArray jsonArray = jsonObject.getJSONArray("list");
+                            for (int i = 0; i<24; i++){
+                                JSONObject inforOneHour = jsonArray.getJSONObject(i);
+                                JSONObject main = inforOneHour.getJSONObject("main");
+                                double temp = main.getDouble("temp");
+                                int tempInt = (int) Math.round(temp);
+
+                                JSONArray weather = inforOneHour.getJSONArray("weather");
+                                JSONObject infoWeather = weather.getJSONObject(0);
+                                String icon = infoWeather.getString("icon");
+
+                                String date = inforOneHour.getString("dt");
+                                Date time = new Date(Long.valueOf(date) * 1000L);
+
+                                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
+                                String hour = simpleDateFormat.format(time);
+
+                                OneHourInfo oneHourInfo = new OneHourInfo(tempInt,icon,hour);
+
+                                oneHourAdapter.add(oneHourInfo);
+
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("myLog","get data fail 24h");
+                    }
+                });
+        requestQueue.add(stringRequest);
+    }
 
     private void getCurrentData(String city){
         Log.d("myLog","getting data");
+
         requestQueue = Volley.newRequestQueue(MainActivity.this);
         String url = "https://api.openweathermap.org/data/2.5/weather?q="+city+"&units=metric&appid=a294d4f6615e3794f086c469c0258c7b";
         StringRequest stringRequest= new StringRequest(Request.Method.GET, url,
@@ -223,6 +278,7 @@ public class MainActivity extends AppCompatActivity {
         visibleInfor  = (TextView) findViewById(R.id.visibleInfor);
         dew_pointInfor  = (TextView) findViewById(R.id.dew_pointInfor);
         pressureInfor  = (TextView) findViewById(R.id.pressureInfor);
+        list24h = (ListView) findViewById(R.id.hourlyForecastList);
 
     }
 

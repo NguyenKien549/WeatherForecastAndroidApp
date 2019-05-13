@@ -3,7 +3,7 @@ package apt.tutorial.weatherforecastapp;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class OneHourHoder {
+public class OneHourHolder {
     TextView hourlyTemp;
     ImageView stateIcon;
     TextView hourlyTime;

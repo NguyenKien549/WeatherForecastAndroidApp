@@ -3,7 +3,13 @@ package apt.tutorial.weatherforecastapp;
 public class OneHourInfo {
     private int temp;
     private String stateIcon;
-    private int time;
+    private String time;
+
+    public OneHourInfo(int temp, String stateIcon, String time) {
+        this.temp = temp;
+        this.stateIcon = stateIcon;
+        this.time = time;
+    }
 
     public int getTemp() {
         return temp;
@@ -21,11 +27,11 @@ public class OneHourInfo {
         this.stateIcon = stateIcon;
     }
 
-    public int getTime() {
+    public String getTime() {
         return time;
     }
 
-    public void setTime(int time) {
+    public void setTime(String time) {
         this.time = time;
     }
 }
