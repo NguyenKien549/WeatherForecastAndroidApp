@@ -1,5 +1,8 @@
 package apt.tutorial.weatherforecastapp;
 
+import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -69,48 +72,63 @@ public class MainActivity extends AppCompatActivity {
         //map component in main.xml
         anhXa();
 
-        //get data from api
-        getCurrentData("Hanoi");
+        boolean internetAvailable = checkNetwork();
+        if(internetAvailable){
+            //get data from api
+            getCurrentData("Hanoi");
 
-        //get data 24h from api
-        get24hoursData("Hanoi");
+            //get data 24h from api
+            get24hoursData("Hanoi");
 
-        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        getSupportActionBar().setDisplayShowCustomEnabled(true);
-        getSupportActionBar().setCustomView(R.layout.custom_action_bar);
+            //custom action bar
+            getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+            getSupportActionBar().setDisplayShowCustomEnabled(true);
+            getSupportActionBar().setCustomView(R.layout.custom_action_bar);
 
-        mpLineChart=(LineChart)findViewById(R.id.line_chart);
-        LineDataSet lineDataSet1=new LineDataSet(dataValues1(),"");
-        LineDataSet lineDataSet2=new LineDataSet(dataValues2(),"");
-        ArrayList<ILineDataSet> dataSets=new ArrayList<>();
-        dataSets.add(lineDataSet1);
-        dataSets.add(lineDataSet2);
+            mpLineChart=(LineChart)findViewById(R.id.line_chart);
+            LineDataSet lineDataSet1=new LineDataSet(dataValues1(),"");
+            LineDataSet lineDataSet2=new LineDataSet(dataValues2(),"");
+            ArrayList<ILineDataSet> dataSets=new ArrayList<>();
+            dataSets.add(lineDataSet1);
+            dataSets.add(lineDataSet2);
 //        mpLineChart.setBackgroundColor(Color.BLUE);
-        mpLineChart.setDrawGridBackground(false);
-        mpLineChart.setDrawBorders(false);
-        mpLineChart.getAxisLeft().setDrawGridLines(false);
-        mpLineChart.getXAxis().setDrawGridLines(false);
+            mpLineChart.setDrawGridBackground(false);
+            mpLineChart.setDrawBorders(false);
+            mpLineChart.getAxisLeft().setDrawGridLines(false);
+            mpLineChart.getXAxis().setDrawGridLines(false);
 
-        mpLineChart.getAxisRight().setDrawGridLines(false);
-        mpLineChart.getXAxis().setDrawGridLines(false);
-        mpLineChart.getXAxis().setEnabled(false);
-        mpLineChart.getAxisRight().setEnabled(false);
-        mpLineChart.getAxisLeft().setEnabled(false);
+            mpLineChart.getAxisRight().setDrawGridLines(false);
+            mpLineChart.getXAxis().setDrawGridLines(false);
+            mpLineChart.getXAxis().setEnabled(false);
+            mpLineChart.getAxisRight().setEnabled(false);
+            mpLineChart.getAxisLeft().setEnabled(false);
 
-        mpLineChart.getAxisLeft().setDrawAxisLine(false);
-        mpLineChart.getAxisRight().setDrawAxisLine(false);
+            mpLineChart.getAxisLeft().setDrawAxisLine(false);
+            mpLineChart.getAxisRight().setDrawAxisLine(false);
 
-        mpLineChart.getLegend().setEnabled(false);
-        Description des=new Description();
-        des.setText("");
-        mpLineChart.setDescription(des);
+            mpLineChart.getLegend().setEnabled(false);
+            Description des=new Description();
+            des.setText("");
+            mpLineChart.setDescription(des);
 
-        LineData data=new LineData(dataSets);
-        data.setValueFormatter(new MyValueFormat());
-        mpLineChart.setData(data);
-        mpLineChart.invalidate();
-
+            LineData data=new LineData(dataSets);
+            data.setValueFormatter(new MyValueFormat());
+            mpLineChart.setData(data);
+            mpLineChart.invalidate();
+        }
 }
+
+    private boolean checkNetwork() {
+        ConnectivityManager cm = (ConnectivityManager)getSystemService(CONNECTIVITY_SERVICE);
+        NetworkInfo info = cm.getActiveNetworkInfo();
+        if (info != null) {
+            return true;
+        }
+        else {
+            Toast.makeText(this, "Sorry, the Internet is not available",Toast.LENGTH_LONG).show();
+        }
+        return false;
+    }
 
     private void initRecycleView() {
         recyclerView = (RecyclerView) findViewById(R.id.recycler24h);
@@ -153,7 +171,6 @@ public class MainActivity extends AppCompatActivity {
                                 OneHourInfo oneHourInfo = new OneHourInfo(tempInt,icon,hour);
 
                                 listModel.add(oneHourInfo);
-
                             }
 
                             //khoi tao recycle view
