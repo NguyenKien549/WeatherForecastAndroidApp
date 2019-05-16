@@ -2,29 +2,34 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/hourly"
-    android:layout_width="wrap_content"
+    android:layout_width="70dp"
     android:layout_height="wrap_content"
     android:background="@color/colorGrey"
     android:orientation="vertical">
 
     <TextView
         android:id="@+id/hourlyTemp"
-        android:layout_width="match_parent"
+        android:layout_width="70dp"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:text="28*"
-        android:textSize="18dp" />
+        android:textSize="18dp"
+        android:textColor="#FFFFFF"/>
 
     <ImageView
         android:id="@+id/stateIcon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
+        android:scaleY="1"
+        android:scaleX="1"
+        android:layout_gravity="center_horizontal"
         android:src="@drawable/ball_yellow" />
 
     <TextView
         android:id="@+id/hourlyTime"
-        android:layout_width="match_parent"
+        android:layout_width="70dp"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:text="24:00"

@@ -32,7 +32,7 @@ public class HourlyAdapter extends RecyclerView.Adapter<HourlyAdapter.ViewHolder
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.hourlyTime.setText(list.get(position).getTime());
-        holder.hourlyTemp.setText(list.get(position).getTemp());
+        holder.hourlyTemp.setText(list.get(position).getTemp()+"°");
         Picasso.with(context).load("https://openweathermap.org/img/w/"+list.get(position).getStateIcon()+".png").into(holder.stateIcon);
     }
 
