@@ -111,25 +111,21 @@
                 android:textSize="15dp"
                 android:textStyle="bold" />
 
-            <HorizontalScrollView
+            <!--<HorizontalScrollView-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginTop="5dp"-->
+                <!--android:fillViewport="true"-->
+                <!--android:scrollbars="none">-->
+
+
+            <!--</HorizontalScrollView>-->
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler24h"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:fillViewport="true"
-                android:scrollbars="none">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
-                    <ListView android:id="@+id/hourlyForecastList"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1" />
-
-                </LinearLayout>
-            </HorizontalScrollView>
+                android:layout_height="match_parent"
+                android:scrollbars="horizontal" />
 
             <LinearLayout
                 android:orientation="vertical"

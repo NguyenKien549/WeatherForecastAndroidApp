@@ -6,8 +6,11 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 
 import android.graphics.Color;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,18 +58,14 @@ public class MainActivity extends AppCompatActivity {
     TextView pressureInfor;
 
     RequestQueue requestQueue;
+    RecyclerView recyclerView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //map component in main.xml
         anhXa();
-        //config default internet
-//        if (android.os.Build.VERSION.SDK_INT > 9)
-//        {
-//            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-//            StrictMode.setThreadPolicy(policy);
-//        }
+
 
         //get data from api
         getCurrentData("Hanoi");
@@ -106,8 +105,17 @@ public class MainActivity extends AppCompatActivity {
         mpLineChart.setData(data);
         mpLineChart.invalidate();
 
-
+        //khoi tao recycle view
+        initRecycleView();
 }
+
+    private void initRecycleView() {
+        recyclerView = (RecyclerView) findViewById(R.id.recycler24h);
+        recyclerView.setHasFixedSize(true);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false);
+
+
+    }
 
     private void getCurrentData(String city){
         Log.d("myLog","getting data");
