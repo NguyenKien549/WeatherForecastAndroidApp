@@ -42,10 +42,15 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import java.util.List;
+
+
 
 public class MainActivity extends AppCompatActivity {
 
     LineChart mpLineChart;
+
+    static ArrayList<Daily> dailyArrayList=new ArrayList<Daily>();
 
     TextView currentTemp;
     TextView maxTemp;
@@ -71,6 +76,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         //map component in main.xml
         anhXa();
+         getFiveDays("HaNoi");
+
+//        Log.d("myLog","max data"+dailyArrayList.get(1).getMaxTemp());
+//        Daily daily2= dailyArrayList.;
+//        Log.d("myLog","list"+daily2.minTemp);
+
 
         boolean internetAvailable = checkNetwork();
         if(internetAvailable){
@@ -79,15 +90,14 @@ public class MainActivity extends AppCompatActivity {
 
             //get data 24h from api
             get24hoursData("Hanoi");
-
-            //custom action bar
             getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+
             getSupportActionBar().setDisplayShowCustomEnabled(true);
             getSupportActionBar().setCustomView(R.layout.custom_action_bar);
 
             mpLineChart=(LineChart)findViewById(R.id.line_chart);
-            LineDataSet lineDataSet1=new LineDataSet(dataValues1(),"");
-            LineDataSet lineDataSet2=new LineDataSet(dataValues2(),"");
+            LineDataSet lineDataSet1=new LineDataSet(dataValues1(dailyArrayList),"");
+            LineDataSet lineDataSet2=new LineDataSet(dataValues2(dailyArrayList),"");
             ArrayList<ILineDataSet> dataSets=new ArrayList<>();
             dataSets.add(lineDataSet1);
             dataSets.add(lineDataSet2);
@@ -115,6 +125,10 @@ public class MainActivity extends AppCompatActivity {
             data.setValueFormatter(new MyValueFormat());
             mpLineChart.setData(data);
             mpLineChart.invalidate();
+
+            //get data from api
+//        getCurrentData("Hanoi");
+
         }
 }
 
@@ -137,6 +151,9 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         HourlyAdapter hourlyAdapter = new HourlyAdapter(listModel,MainActivity.this);
         recyclerView.setAdapter(hourlyAdapter);
+
+
+
 }
 
     private void get24hoursData(String city) {
@@ -190,10 +207,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getCurrentData(String city){
+
         Log.d("myLog","getting data");
 
         requestQueue = Volley.newRequestQueue(MainActivity.this);
         String url = "https://api.openweathermap.org/data/2.5/weather?q="+city+"&units=metric&appid=a294d4f6615e3794f086c469c0258c7b";
+
         StringRequest stringRequest= new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
@@ -262,6 +281,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
     private void setUVInfor(double lat, double lon){
         requestQueue = Volley.newRequestQueue(MainActivity.this);
         String url = "https://api.openweathermap.org/data/2.5/uvi?lat="
@@ -286,6 +306,76 @@ public class MainActivity extends AppCompatActivity {
                         }
                 });
         requestQueue.add(stringRequest);
+
+    private void getFiveDays(String city){
+
+            RequestQueue requestQueue = Volley.newRequestQueue(MainActivity.this);
+//              ArrayList<Daily> arrayList=new ArrayList<>();
+            String url = "http://dataservice.accuweather.com/forecasts/v1/daily/5day/1-353412_1_AL?apikey=iWk88SAOPAo4Iz3IwgDIjttJXwGntpPR&language=en-us&details=true&metric=true";
+
+            StringRequest stringRequest= new StringRequest(Request.Method.GET, url,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            Toast.makeText(MainActivity.this, "Getting data...", Toast.LENGTH_LONG).show();
+                            Log.d("myLog","getting data"+response);
+
+                            try {
+                                JSONObject jsonObject=new JSONObject(response);
+                                JSONArray jsonArrayDaily=jsonObject.getJSONArray("DailyForecasts");
+                                for(int i=0;i<jsonArrayDaily.length();i++){
+                                    JSONObject jsonObjectOneday=jsonArrayDaily.getJSONObject(i);
+
+                                    // lấy ngày tháng
+                                    String ngay=jsonObjectOneday.getString("EpochDate");
+
+                                    long l=Long.valueOf(ngay);
+                                    Date date=new Date(l*1000L);
+                                    SimpleDateFormat simpleDateFormat=new SimpleDateFormat("EEEE yyyy-MM-dd");
+                                    String day= simpleDateFormat.format(date);
+
+
+                                    // lấy nhiệt độ max min trong ngày
+                                    JSONObject jsonObjectTemp=jsonObjectOneday.getJSONObject("Temperature");
+                                    JSONObject jsonObjectMinTemp=jsonObjectTemp.getJSONObject("Minimum");
+                                    int minTemp=jsonObjectMinTemp.getInt("Value");
+
+
+                                    JSONObject jsonObjectMaxTemp=jsonObjectTemp.getJSONObject("Maximum");
+                                    int maxTemp=jsonObjectMaxTemp.getInt("Value");
+
+                                    // lấy icon và mô tả
+                                    JSONObject jsonObjectDay=jsonObjectOneday.getJSONObject("Day");
+
+                                    int icon=jsonObjectDay.getInt("Icon");
+
+
+                                    String des=jsonObjectDay.getString("ShortPhrase");
+
+                                    Daily daily=new Daily(day,minTemp,maxTemp,icon,des);
+
+                                    dailyArrayList.add(daily);
+
+                                }
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Toast.makeText(MainActivity.this, "Getting data error...", Toast.LENGTH_LONG).show();
+                        }
+                    });
+            requestQueue.add(stringRequest);
+//        Log.d("myLog3","arr "+arrayList.get(1).toString());
+//            return arrayList;
+
+
+
     }
 
     private void anhXa(){
@@ -307,26 +397,31 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private ArrayList<Entry> dataValues1(){
+    private ArrayList<Entry> dataValues1(ArrayList<Daily> dailyArrayList){
         ArrayList<Entry> dataVals=new ArrayList<Entry>();
-        dataVals.add(new Entry(0,20));
-        dataVals.add(new Entry(1,23));
-        dataVals.add(new Entry(2,22));
-        dataVals.add(new Entry(3,25));
-        dataVals.add(new Entry(4,29));
+        for(int i=0;i<dailyArrayList.size();i++){
+            dataVals.add(new Entry(i,dailyArrayList.get(i).getMinTemp()));
+        }
+//       dataVals.add(new Entry(0,20));
+//        dataVals.add(new Entry(1,23));
+//        dataVals.add(new Entry(2,22));
+//        dataVals.add(new Entry(3,25));
+//        dataVals.add(new Entry(4,29));
 
         return dataVals;
     }
 
-    private ArrayList<Entry> dataValues2(){
+    private ArrayList<Entry> dataValues2(ArrayList<Daily> dailyArrayList){
         ArrayList<Entry> dataVals=new ArrayList<Entry>();
-        dataVals.add(new Entry(0,30));
-        dataVals.add(new Entry(1,33));
-        dataVals.add(new Entry(2,32));
-        dataVals.add(new Entry(3,35));
-        dataVals.add(new Entry(4,39));
+        for(int i=0;i<dailyArrayList.size();i++){
+            dataVals.add(new Entry(i,dailyArrayList.get(i).getMaxTemp()));
+        }
 
-
+//        dataVals.add(new Entry(0,25));
+//        dataVals.add(new Entry(1,26));
+//        dataVals.add(new Entry(2,27));
+//        dataVals.add(new Entry(3,28));
+//        dataVals.add(new Entry(4,29));
         return dataVals;
     }
 
