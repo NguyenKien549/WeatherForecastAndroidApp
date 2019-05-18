@@ -40,6 +40,7 @@ import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 import java.util.List;
@@ -50,7 +51,8 @@ public class MainActivity extends AppCompatActivity {
 
     LineChart mpLineChart;
 
-    static ArrayList<Daily> dailyArrayList=new ArrayList<Daily>();
+    ArrayList<Daily> dailyArrayList=null;
+    String locationKey=null;
 
     TextView currentTemp;
     TextView maxTemp;
@@ -76,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         //map component in main.xml
         anhXa();
-         getFiveDays("HaNoi");
+
 
 //        Log.d("myLog","max data"+dailyArrayList.get(1).getMaxTemp());
 //        Daily daily2= dailyArrayList.;
@@ -87,50 +89,57 @@ public class MainActivity extends AppCompatActivity {
         if(internetAvailable){
             //get data from api
             getCurrentData("Hanoi");
+            Log.d("myLog","list"+currentDate.getText());
 
             //get data 24h from api
             get24hoursData("Hanoi");
+
+            //get 5 days
+           getLocationKey("HaNoi");
+
             getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
 
-            getSupportActionBar().setDisplayShowCustomEnabled(true);
-            getSupportActionBar().setCustomView(R.layout.custom_action_bar);
 
-            mpLineChart=(LineChart)findViewById(R.id.line_chart);
-            LineDataSet lineDataSet1=new LineDataSet(dataValues1(dailyArrayList),"");
-            LineDataSet lineDataSet2=new LineDataSet(dataValues2(dailyArrayList),"");
-            ArrayList<ILineDataSet> dataSets=new ArrayList<>();
-            dataSets.add(lineDataSet1);
-            dataSets.add(lineDataSet2);
-//        mpLineChart.setBackgroundColor(Color.BLUE);
-            mpLineChart.setDrawGridBackground(false);
-            mpLineChart.setDrawBorders(false);
-            mpLineChart.getAxisLeft().setDrawGridLines(false);
-            mpLineChart.getXAxis().setDrawGridLines(false);
 
-            mpLineChart.getAxisRight().setDrawGridLines(false);
-            mpLineChart.getXAxis().setDrawGridLines(false);
-            mpLineChart.getXAxis().setEnabled(false);
-            mpLineChart.getAxisRight().setEnabled(false);
-            mpLineChart.getAxisLeft().setEnabled(false);
-
-            mpLineChart.getAxisLeft().setDrawAxisLine(false);
-            mpLineChart.getAxisRight().setDrawAxisLine(false);
-
-            mpLineChart.getLegend().setEnabled(false);
-            Description des=new Description();
-            des.setText("");
-            mpLineChart.setDescription(des);
-
-            LineData data=new LineData(dataSets);
-            data.setValueFormatter(new MyValueFormat());
-            mpLineChart.setData(data);
-            mpLineChart.invalidate();
-
-            //get data from api
-//        getCurrentData("Hanoi");
 
         }
 }
+
+    public void setChart(ArrayList<Daily> dailyArrayList){
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
+        getSupportActionBar().setCustomView(R.layout.custom_action_bar);
+
+        mpLineChart=(LineChart)findViewById(R.id.line_chart);
+        LineDataSet lineDataSet1=new LineDataSet(dataValues1(dailyArrayList),"");
+        LineDataSet lineDataSet2=new LineDataSet(dataValues2(dailyArrayList),"");
+        ArrayList<ILineDataSet> dataSets=new ArrayList<>();
+        dataSets.add(lineDataSet1);
+        dataSets.add(lineDataSet2);
+//        mpLineChart.setBackgroundColor(Color.BLUE);
+        mpLineChart.setDrawGridBackground(false);
+        mpLineChart.setDrawBorders(false);
+        mpLineChart.getAxisLeft().setDrawGridLines(false);
+        mpLineChart.getXAxis().setDrawGridLines(false);
+
+        mpLineChart.getAxisRight().setDrawGridLines(false);
+        mpLineChart.getXAxis().setDrawGridLines(false);
+        mpLineChart.getXAxis().setEnabled(false);
+        mpLineChart.getAxisRight().setEnabled(false);
+        mpLineChart.getAxisLeft().setEnabled(false);
+
+        mpLineChart.getAxisLeft().setDrawAxisLine(false);
+        mpLineChart.getAxisRight().setDrawAxisLine(false);
+
+        mpLineChart.getLegend().setEnabled(false);
+        Description des=new Description();
+        des.setText("");
+        mpLineChart.setDescription(des);
+
+        LineData data=new LineData(dataSets);
+        data.setValueFormatter(new MyValueFormat());
+        mpLineChart.setData(data);
+        mpLineChart.invalidate();
+    }
 
     private boolean checkNetwork() {
         ConnectivityManager cm = (ConnectivityManager)getSystemService(CONNECTIVITY_SERVICE);
@@ -151,10 +160,16 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         HourlyAdapter hourlyAdapter = new HourlyAdapter(listModel,MainActivity.this);
         recyclerView.setAdapter(hourlyAdapter);
+    }
 
-
-
-}
+    private void initRecycleViewFiveDays() {
+        recyclerView = (RecyclerView) findViewById(R.id.recycler5days);
+        recyclerView.setHasFixedSize(true);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false);
+        recyclerView.setLayoutManager(layoutManager);
+        DailyAdapter dailyAdapter = new DailyAdapter(dailyArrayList,MainActivity.this);
+        recyclerView.setAdapter(dailyAdapter);
+    }
 
     private void get24hoursData(String city) {
         requestQueue = Volley.newRequestQueue(MainActivity.this);
@@ -282,36 +297,61 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void setUVInfor(double lat, double lon){
+    private void setUVInfor(double lat, double lon) {
         requestQueue = Volley.newRequestQueue(MainActivity.this);
         String url = "https://api.openweathermap.org/data/2.5/uvi?lat="
-                +lat+"&lon="+lon+"&appid=a294d4f6615e3794f086c469c0258c7b&cnt=1";
-        StringRequest stringRequest= new StringRequest(Request.Method.GET, url,
+                + lat + "&lon=" + lon + "&appid=a294d4f6615e3794f086c469c0258c7b&cnt=1";
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Log.d("myLog","uvInfor "+response);
+                        Log.d("myLog", "uvInfor " + response);
                         try {
                             JSONObject jsonObject = new JSONObject(response);
                             double uv = jsonObject.getDouble("value");
-                            UVInfor.setText(uv+"");
+                            UVInfor.setText(uv + "");
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                     }
                 }, new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            Log.d("myLog","uvInfor fail");
-                        }
-                });
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("myLog", "uvInfor fail");
+            }
+        });
         requestQueue.add(stringRequest);
+    }
 
-    private void getFiveDays(String city){
+    private void getLocationKey(String city){
+        requestQueue = Volley.newRequestQueue(MainActivity.this);
+        String url = "http://dataservice.accuweather.com/locations/v1/cities/search?apikey=iWk88SAOPAo4Iz3IwgDIjttJXwGntpPR&q="+city+"&language=en-us&details=true";
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONArray jsonArray = new JSONArray(response);
+                             JSONObject jsonObject = jsonArray.getJSONObject(0);
+                             locationKey=jsonObject.getString("Key");
+                            Log.d("myLog","key"+locationKey);
+                             getFiveDays(locationKey);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+            }
+        });
+        requestQueue.add(stringRequest);
+    }
+    private void getFiveDays(String locationKey){
 
-            RequestQueue requestQueue = Volley.newRequestQueue(MainActivity.this);
+            requestQueue = Volley.newRequestQueue(MainActivity.this);
 //              ArrayList<Daily> arrayList=new ArrayList<>();
-            String url = "http://dataservice.accuweather.com/forecasts/v1/daily/5day/1-353412_1_AL?apikey=iWk88SAOPAo4Iz3IwgDIjttJXwGntpPR&language=en-us&details=true&metric=true";
+            String url = "http://dataservice.accuweather.com/forecasts/v1/daily/5day/"+locationKey+"?apikey=iWk88SAOPAo4Iz3IwgDIjttJXwGntpPR&language=vi-vn&details=true&metric=true";
 
             StringRequest stringRequest= new StringRequest(Request.Method.GET, url,
                     new Response.Listener<String>() {
@@ -327,11 +367,13 @@ public class MainActivity extends AppCompatActivity {
                                     JSONObject jsonObjectOneday=jsonArrayDaily.getJSONObject(i);
 
                                     // lấy ngày tháng
-                                    String ngay=jsonObjectOneday.getString("EpochDate");
-
-                                    long l=Long.valueOf(ngay);
-                                    Date date=new Date(l*1000L);
-                                    SimpleDateFormat simpleDateFormat=new SimpleDateFormat("EEEE yyyy-MM-dd");
+                                    Long ngay=jsonObjectOneday.getLong("EpochDate");
+                                    Date date=new Date(ngay*1000L);
+                                    Calendar c = Calendar.getInstance();
+                                    c.setTime(date);
+                                    c.add(Calendar.DATE, 1);
+                                    date = c.getTime();
+                                    SimpleDateFormat simpleDateFormat=new SimpleDateFormat("E");
                                     String day= simpleDateFormat.format(date);
 
 
@@ -339,24 +381,24 @@ public class MainActivity extends AppCompatActivity {
                                     JSONObject jsonObjectTemp=jsonObjectOneday.getJSONObject("Temperature");
                                     JSONObject jsonObjectMinTemp=jsonObjectTemp.getJSONObject("Minimum");
                                     int minTemp=jsonObjectMinTemp.getInt("Value");
-
-
                                     JSONObject jsonObjectMaxTemp=jsonObjectTemp.getJSONObject("Maximum");
                                     int maxTemp=jsonObjectMaxTemp.getInt("Value");
 
                                     // lấy icon và mô tả
                                     JSONObject jsonObjectDay=jsonObjectOneday.getJSONObject("Day");
-
                                     int icon=jsonObjectDay.getInt("Icon");
-
-
-                                    String des=jsonObjectDay.getString("ShortPhrase");
+                                    Log.d("icon",""+icon);
+                                    String des=jsonObjectDay.getString("PrecipitationProbability");
+                                    des+=" %";
 
                                     Daily daily=new Daily(day,minTemp,maxTemp,icon,des);
+                                    Log.d("myLog","daily "+daily.toString());
 
                                     dailyArrayList.add(daily);
 
                                 }
+                                initRecycleViewFiveDays();
+                                setChart(dailyArrayList);
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -394,6 +436,7 @@ public class MainActivity extends AppCompatActivity {
         pressureInfor  = (TextView) findViewById(R.id.pressureInfor);
 
         listModel = new ArrayList<>();
+        dailyArrayList=new ArrayList<>();
 
     }
 
