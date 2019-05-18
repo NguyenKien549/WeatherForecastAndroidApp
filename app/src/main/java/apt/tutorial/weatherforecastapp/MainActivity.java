@@ -1,12 +1,20 @@
 package apt.tutorial.weatherforecastapp;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-
+import android.support.v4.app.ActivityCompat;
 
 import android.graphics.Color;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,6 +23,7 @@ import android.util.Log;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -67,43 +76,116 @@ public class MainActivity extends AppCompatActivity {
     TextView visibleInfor;
     TextView dew_pointInfor;
     TextView pressureInfor;
+    TextView aqi;
+    TextView shortphase;
+    TextView longphase;
+    ProgressBar determinateBar;
 
     ArrayList<OneHourInfo> listModel = null;
 
     RequestQueue requestQueue;
     RecyclerView recyclerView;
+
+
+    private LocationManager locationManager;
+    private LocationListener listener;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //map component in main.xml
         anhXa();
-
-
-//        Log.d("myLog","max data"+dailyArrayList.get(1).getMaxTemp());
-//        Daily daily2= dailyArrayList.;
-//        Log.d("myLog","list"+daily2.minTemp);
-
-
         boolean internetAvailable = checkNetwork();
-        if(internetAvailable){
-            //get data from api
-            getCurrentData("Hanoi");
-            Log.d("myLog","list"+currentDate.getText());
+        if(internetAvailable) {
 
-            //get data 24h from api
-            get24hoursData("Hanoi");
+            locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
-            //get 5 days
-           getLocationKey("HaNoi");
+            listener = new LocationListener() {
+                @Override
+                public void onLocationChanged(Location location) {
+                    double lon = location.getLongitude();
+                    Log.d("kinhdo",""+lon);
+                    double lat = location.getLatitude();
+                    Log.d("kinhdo",""+lat);
+                    getInforFromGPS(lat,lon);
+                }
 
+                @Override
+                public void onStatusChanged(String s, int i, Bundle bundle) {
+
+                }
+
+                @Override
+                public void onProviderEnabled(String s) {
+
+                }
+
+                @Override
+                public void onProviderDisabled(String s) {
+
+                    Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    startActivity(i);
+                }
+            };
+            configure_button();
             getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-
-
-
-
         }
-}
+
+
+
+
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode){
+            case 10:
+                configure_button();
+                break;
+            default:
+                break;
+        }
+    }
+
+    void configure_button(){
+        // first check for permissions
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.INTERNET}
+                        ,10);
+            }
+            return;
+        }
+        locationManager.requestLocationUpdates("gps", 5000, 0, listener);
+    }
+
+    private void getInforFromGPS(double lat, double lon) {
+        requestQueue = Volley.newRequestQueue(MainActivity.this);
+        String url = "http://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=iWk88SAOPAo4Iz3IwgDIjttJXwGntpPR&q="+lat+"%2C"+lon+"&language=en-us&details=true&toplevel=true";
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("myLog", "location infor " + response);
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            String city=jsonObject.getString("LocalizedName");
+                            Log.d("namecity",""+city);
+                            getCurrentData(city);
+                            get24hoursData(city);
+                            getLocationKey(city);
+                            getIndexAir(city);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+            }
+        });
+        requestQueue.add(stringRequest);
+    }
 
     public void setChart(ArrayList<Daily> dailyArrayList){
         getSupportActionBar().setDisplayShowCustomEnabled(true);
@@ -164,7 +246,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void initRecycleViewFiveDays() {
         recyclerView = (RecyclerView) findViewById(R.id.recycler5days);
-        recyclerView.setHasFixedSize(true);
+        recyclerView.setHasFixedSize(false);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false);
         recyclerView.setLayoutManager(layoutManager);
         DailyAdapter dailyAdapter = new DailyAdapter(dailyArrayList,MainActivity.this);
@@ -261,14 +343,11 @@ public class MainActivity extends AppCompatActivity {
                             JSONObject jsonObjectMain = jsonObject.getJSONObject("main");
                             int temp = jsonObjectMain.getInt("temp");
                             int pressure = jsonObjectMain.getInt("pressure");
-                            int temp_min = jsonObjectMain.getInt("temp_min");
-                            int temp_max = jsonObjectMain.getInt("temp_max");
+
                             int humidity = jsonObjectMain.getInt("humidity");
                             int visibility = jsonObject.getInt("visibility");
 
                             currentTemp.setText(temp+"°C");
-                            minTemp.setText(temp_min+"°");
-                            maxTemp.setText(temp_max+"°");
 
                             tempInfor.setText(temp+"°C");
                             pressureInfor.setText(pressure+" mb");
@@ -350,7 +429,6 @@ public class MainActivity extends AppCompatActivity {
     private void getFiveDays(String locationKey){
 
             requestQueue = Volley.newRequestQueue(MainActivity.this);
-//              ArrayList<Daily> arrayList=new ArrayList<>();
             String url = "http://dataservice.accuweather.com/forecasts/v1/daily/5day/"+locationKey+"?apikey=iWk88SAOPAo4Iz3IwgDIjttJXwGntpPR&language=vi-vn&details=true&metric=true";
 
             StringRequest stringRequest= new StringRequest(Request.Method.GET, url,
@@ -380,9 +458,11 @@ public class MainActivity extends AppCompatActivity {
                                     // lấy nhiệt độ max min trong ngày
                                     JSONObject jsonObjectTemp=jsonObjectOneday.getJSONObject("Temperature");
                                     JSONObject jsonObjectMinTemp=jsonObjectTemp.getJSONObject("Minimum");
-                                    int minTemp=jsonObjectMinTemp.getInt("Value");
+                                    double minTempa=jsonObjectMinTemp.getDouble("Value");
+                                    int minTemp=(int)Math.round(minTempa);
                                     JSONObject jsonObjectMaxTemp=jsonObjectTemp.getJSONObject("Maximum");
-                                    int maxTemp=jsonObjectMaxTemp.getInt("Value");
+                                    double maxTempa=jsonObjectMaxTemp.getDouble("Value");
+                                    int maxTemp=(int)Math.round(maxTempa);
 
                                     // lấy icon và mô tả
                                     JSONObject jsonObjectDay=jsonObjectOneday.getJSONObject("Day");
@@ -397,6 +477,12 @@ public class MainActivity extends AppCompatActivity {
                                     dailyArrayList.add(daily);
 
                                 }
+
+                                int temp_min = dailyArrayList.get(0).minTemp;
+                                int temp_max = dailyArrayList.get(0).maxTemp;
+                                minTemp.setText(temp_min+"°");
+                                 maxTemp.setText(temp_max+"°");
+
                                 initRecycleViewFiveDays();
                                 setChart(dailyArrayList);
 
@@ -413,11 +499,55 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
             requestQueue.add(stringRequest);
-//        Log.d("myLog3","arr "+arrayList.get(1).toString());
-//            return arrayList;
+    }
 
-
-
+    private void getIndexAir(String city){
+        requestQueue = Volley.newRequestQueue(MainActivity.this);
+        String url = "https://api.waqi.info/search/?keyword="+city+"&token=ecd6f5df45189b11745d9819772e75fa515b61cd";
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject jsonObjectAir = new JSONObject(response);
+                            JSONArray jsonObjectIndex = jsonObjectAir.getJSONArray("data");
+                            JSONObject jsonObject=jsonObjectIndex.getJSONObject(0);
+                            String aqiindex1=jsonObject.getString("aqi");
+                            Log.d("aqi","aqi"+aqiindex1);
+                            aqi.setText(aqiindex1);
+                            if(!aqiindex1.equals("-")) {
+                                int aqiindex = Integer.parseInt(aqiindex1);
+                                determinateBar.setProgress(aqiindex/5);
+                                if (aqiindex <= 50) {
+                                    shortphase.setText("Tốt");
+                                    longphase.setText("Chất lượng không khí đạt tiêu chuẩn");
+                                } else if (aqiindex <= 100) {
+                                    shortphase.setText("Vừa phải");
+                                    longphase.setText("Chất lượng không khí ở mức chấp nhận được");
+                                } else if (aqiindex <= 150) {
+                                    shortphase.setText("Không tốt cho người nhạy cảm");
+                                    longphase.setText("Nhóm người nhạy cảm có thể chịu ảnh hưởng sức khỏe");
+                                } else if (aqiindex <= 200) {
+                                    shortphase.setText("Có hại cho sức khỏe");
+                                    longphase.setText("Mọi người đều chịu tác động đến sức khỏe, nghiêm trọng hơn là nhóm người nhạy cảm");
+                                } else if (aqiindex <= 300) {
+                                    shortphase.setText("Rất có hại cho sức khỏe");
+                                    longphase.setText("Cảnh báo nguy hại sức khỏe nghiêm trọng, tất cả mọi người đều chịu ảnh hưởng");
+                                } else {
+                                    shortphase.setText("Cực kỳ nguy hiểm");
+                                    longphase.setText("Cảnh báo nguy hại nghiêm trọng đến sức khỏe tất cả mọi người");
+                                }
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+            }
+        });
+        requestQueue.add(stringRequest);
     }
 
     private void anhXa(){
@@ -434,6 +564,10 @@ public class MainActivity extends AppCompatActivity {
         visibleInfor  = (TextView) findViewById(R.id.visibleInfor);
         dew_pointInfor  = (TextView) findViewById(R.id.dew_pointInfor);
         pressureInfor  = (TextView) findViewById(R.id.pressureInfor);
+        aqi=(TextView)findViewById(R.id.aqi);
+        shortphase=(TextView)findViewById(R.id.shortphase);
+        longphase=(TextView)findViewById(R.id.longphase);
+        determinateBar=(ProgressBar)findViewById(R.id.determinateBar);
 
         listModel = new ArrayList<>();
         dailyArrayList=new ArrayList<>();

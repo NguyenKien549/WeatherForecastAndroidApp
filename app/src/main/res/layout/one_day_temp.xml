@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    android:layout_width="70dp"
     android:layout_height="wrap_content"
-    android:layout_margin="5dp"
-    android:layout_weight="1"
+    android:layout_marginLeft="2dp"
+    android:background="@color/colorBlue"
     android:orientation="vertical">
 
     <TextView android:id="@+id/dailyDes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
+        android:textColor="@color/colorDes"
         android:gravity="center_horizontal"
         android:text="mưa nhỏ"
         android:textSize="10dp" />
 
     <ImageView android:id="@+id/dailyIcon"
-        android:layout_width="wrap_content"
+        android:layout_width="40dp"
         android:layout_height="30dp"
         android:layout_margin="20dp"
+
+        android:layout_gravity="center"
 
         android:src="@drawable/sun" />
 

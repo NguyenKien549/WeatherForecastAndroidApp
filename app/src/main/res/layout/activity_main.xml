@@ -120,26 +120,29 @@
                 />
 
             <LinearLayout
-                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
                 <LinearLayout
-                    android:background="@color/colorPrimary"
-                    android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:background="@color/color5Days"
+                    android:orientation="horizontal">
+
                     <TextView
-                        android:text="NEXT 5 DAYS"
-                        android:textSize="16dp"
-                        android:textStyle="bold"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:text="NEXT 5 DAYS"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="16dp"
+                        android:textStyle="bold" />
+
                     <ImageButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/arrow_right"
                         android:layout_marginLeft="240dp"
+                        android:src="@drawable/arrow_right"
 
                         />
                 </LinearLayout>
@@ -147,20 +150,21 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="200dp">
+
                     <com.github.mikephil.charting.charts.LineChart
-                        android:layout_margin="20dp"
+                        android:id="@+id/line_chart"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:id="@+id/line_chart"/>
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="5dp" />
                 </LinearLayout>
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recycler5days"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:scrollbars="none"
-                    android:layout_marginBottom="8dp"
-                    />
+                    android:layout_marginBottom="4dp"
+                    android:scrollbars="none" />
 
 
             </LinearLayout>
@@ -358,7 +362,75 @@
                     </LinearLayout>
                 </TableRow>
             </TableLayout>
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Chỉ số không khí"
+                    android:textSize="18dp"
+                    android:textStyle="bold"
+                    />
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" >
+                    <TextView
+                        android:id="@+id/aqi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="No data"
+                        android:textSize="50dp"
 
+                        android:layout_gravity="center_vertical"
+                        android:gravity="center_horizontal"
+                        />
+                    <LinearLayout android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="10dp"
+                        >
+                        <TextView android:id="@+id/shortphase"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="No data"
+                            android:textSize="20dp"/>
+
+                        <TextView android:id="@+id/longphase"
+                            android:layout_marginTop="5dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="No data"
+                            />
+
+                    </LinearLayout>
+
+
+
+
+
+                </LinearLayout>
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="29dp"
+                        android:src="@drawable/progress" />
+                    <ProgressBar
+                        android:layout_marginTop="0dp"
+                        android:id="@+id/determinateBar"
+                        style="@android:style/Widget.ProgressBar.Horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:progress="0"/>
+                </LinearLayout>
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 
