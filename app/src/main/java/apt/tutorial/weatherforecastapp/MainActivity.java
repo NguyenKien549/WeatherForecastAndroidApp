@@ -155,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
             }
             return;
         }
-        locationManager.requestLocationUpdates("gps", 5000, 0, listener);
+        locationManager.requestLocationUpdates("gps", 5000, 100000, listener);
     }
 
     private void getInforFromGPS(double lat, double lon) {
@@ -165,10 +165,12 @@ public class MainActivity extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Log.d("myLog", "location infor " + response);
+                        Log.d("aaaa", "location infor " + response);
                         try {
                             JSONObject jsonObject = new JSONObject(response);
-                            String city=jsonObject.getString("LocalizedName");
+                            JSONObject jsonObject1=jsonObject.getJSONObject("AdministrativeArea");
+
+                            String city=jsonObject1.getString("LocalizedName");
                             Log.d("namecity",""+city);
                             getCurrentData(city);
                             get24hoursData(city);
@@ -341,7 +343,7 @@ public class MainActivity extends AppCompatActivity {
                                     +icon+".png").into(currentStateIcon);
 
                             JSONObject jsonObjectMain = jsonObject.getJSONObject("main");
-                            int temp = jsonObjectMain.getInt("temp");
+                            int temp = jsonObjectMain.getInt("temp")+3;
                             int pressure = jsonObjectMain.getInt("pressure");
 
                             int humidity = jsonObjectMain.getInt("humidity");
@@ -503,7 +505,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void getIndexAir(String city){
         requestQueue = Volley.newRequestQueue(MainActivity.this);
-        String url = "https://api.waqi.info/search/?keyword="+city+"&token=ecd6f5df45189b11745d9819772e75fa515b61cd";
+        String url = "https://api.weatherbit.io/v2.0/current/airquality?city="+city+"&key=d629fbdd82ca403899f2eb5fe13ce92f";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
@@ -511,7 +513,8 @@ public class MainActivity extends AppCompatActivity {
                         try {
                             JSONObject jsonObjectAir = new JSONObject(response);
                             JSONArray jsonObjectIndex = jsonObjectAir.getJSONArray("data");
-                            JSONObject jsonObject=jsonObjectIndex.getJSONObject(0);
+                           JSONObject jsonObject=jsonObjectIndex.getJSONObject(0);
+
                             String aqiindex1=jsonObject.getString("aqi");
                             Log.d("aqi","aqi"+aqiindex1);
                             aqi.setText(aqiindex1);
@@ -579,11 +582,6 @@ public class MainActivity extends AppCompatActivity {
         for(int i=0;i<dailyArrayList.size();i++){
             dataVals.add(new Entry(i,dailyArrayList.get(i).getMinTemp()));
         }
-//       dataVals.add(new Entry(0,20));
-//        dataVals.add(new Entry(1,23));
-//        dataVals.add(new Entry(2,22));
-//        dataVals.add(new Entry(3,25));
-//        dataVals.add(new Entry(4,29));
 
         return dataVals;
     }
@@ -594,11 +592,6 @@ public class MainActivity extends AppCompatActivity {
             dataVals.add(new Entry(i,dailyArrayList.get(i).getMaxTemp()));
         }
 
-//        dataVals.add(new Entry(0,25));
-//        dataVals.add(new Entry(1,26));
-//        dataVals.add(new Entry(2,27));
-//        dataVals.add(new Entry(3,28));
-//        dataVals.add(new Entry(4,29));
         return dataVals;
     }
 
