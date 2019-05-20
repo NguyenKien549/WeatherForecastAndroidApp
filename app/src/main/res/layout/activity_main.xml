@@ -5,349 +5,450 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
+
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="71dp">
+
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp">
+            android:layout_marginRight="10dp"
+            android:orientation="vertical">
 
             <LinearLayout
-                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="75dp">
+                android:layout_height="75dp"
+                android:orientation="horizontal">
 
-                <TextView android:id="@+id/currentTemp"
+                <TextView
+                    android:id="@+id/currentTemp"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:text="31*C"
-                    android:gravity="center_horizontal"
                     android:layout_gravity="center_vertical"
-                    android:textSize="65dp"
-                    />
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="31*C"
+                    android:textSize="65dp" />
 
                 <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="1">
-                    <TextView android:id="@+id/maxTemp"
+
+                    <TextView
+                        android:id="@+id/maxTemp"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:text="33*"
-                        android:textSize="30dp"
-                        android:layout_marginTop="15dp"
                         android:layout_alignParentTop="true"
-                        />
-                    <TextView android:id="@+id/spaceMinMax"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="/"
-                        android:layout_toRightOf="@+id/maxTemp"
-                        android:layout_alignParentBottom="true"
-                        android:textSize="45dp"/>
+                        android:layout_marginTop="15dp"
+                        android:text="33*"
+                        android:textSize="30dp" />
 
-                    <TextView android:id="@+id/minTemp"
+                    <TextView
+                        android:id="@+id/spaceMinMax"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="20*"
-                        android:layout_toRightOf="@+id/spaceMinMax"
                         android:layout_alignParentBottom="true"
-                        android:textSize="30dp"
-                        />
+                        android:layout_toRightOf="@+id/maxTemp"
+                        android:text="/"
+                        android:textSize="45dp" />
+
+                    <TextView
+                        android:id="@+id/minTemp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_toRightOf="@+id/spaceMinMax"
+                        android:text="20*"
+                        android:textSize="30dp" />
                 </RelativeLayout>
 
                 <ImageView
-                    android:id="@+id/iconCurrentState"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:id="@+id/currentStateIcon"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
                     android:layout_gravity="center"
                     android:layout_weight="1"
-                    android:src="@drawable/ball_yellow" />
+                    android:scaleX="1"
+                    android:scaleY="1" />
             </LinearLayout>
 
-            <LinearLayout android:id="@+id/info"
-                android:orientation="vertical"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp">
+                android:layout_marginTop="12dp"
+                android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/currentDate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="thu, january 4"
                     android:textAllCaps="true"
-                    android:textSize="15dp"
-                    />
+                    android:textSize="15dp" />
+
                 <TextView
+                    android:id="@+id/currentCity"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Waco"
-                    android:textStyle="bold"
                     android:textSize="30dp"
-                    />
+                    android:textStyle="bold" />
+
                 <TextView
+                    android:id="@+id/currentState"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:text="Clear"
-                    android:textSize="20dp"/>
+                    android:textSize="20dp" />
 
             </LinearLayout>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="NEXT 24 HOURS"
                 android:layout_marginTop="10dp"
-                android:textStyle="bold"
+                android:text="NEXT 24 HOURS"
                 android:textSize="15dp"
-                />
-            <HorizontalScrollView
+                android:textStyle="bold" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler24h"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:scrollbars="none"
-                android:fillViewport="true">
+                android:layout_height="match_parent"
+                android:layout_marginBottom="8dp"
+                android:scrollbars="none" />
 
-                <LinearLayout android:orientation="horizontal"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="wrap_content"
+                    android:background="@color/color5Days"
+                    android:orientation="horizontal">
 
-                    <LinearLayout android:id="@+id/hourly_1"
-                        android:orientation="vertical"
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@color/colorGrey"
-                        >
+                        android:text="NEXT 5 DAYS"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="16dp"
+                        android:textStyle="bold" />
 
-                        <TextView android:id="@+id/hourlyTemp_1"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_horizontal"
-                            android:text="28*"
-                            android:textSize="18dp" />
+                    <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="240dp"
+                        android:src="@drawable/arrow_right"
 
-                        <ImageView android:id="@+id/iconState_1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/ball_yellow"
-                            android:layout_margin="5dp"
-                            />
+                        />
+                </LinearLayout>
 
-                        <TextView android:id="@+id/hourlyTime_1"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="24:00"
-                            android:textSize="18dp"
-                            android:gravity="center_horizontal"/>
-                    </LinearLayout>
-                    <ListView
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp">
+
+                    <com.github.mikephil.charting.charts.LineChart
+                        android:id="@+id/line_chart"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"/>
-
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="5dp" />
                 </LinearLayout>
-            </HorizontalScrollView>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler5days"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="4dp"
+                    android:scrollbars="none" />
+
+
+            </LinearLayout>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:text="chi tiết"
-                android:textSize="18dp"
-                android:textStyle="bold"
                 android:textAllCaps="true"
-                android:layout_marginTop="10dp"/>
+                android:textSize="18dp"
+                android:textStyle="bold" />
 
             <TableLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp">
+
                 <TableRow>
-                    <LinearLayout
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:layout_margin="5dp"
-                        android:background="@color/colorGrey">
-
-                        <ImageView android:id="@+id/tempInforIcon"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/ball_yellow"
-                            android:layout_gravity="center_horizontal"
-                            />
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Cảm giác như"
-                            android:gravity="center_horizontal"
-                            android:layout_marginTop="3dp"/>
-
-                        <TextView android:id="@+id/tempInfor"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="31*C"
-                            android:textSize="25dp"
-                            android:gravity="center"
-                            android:layout_marginTop="3dp"
-                            />
-
-                    </LinearLayout>
 
                     <LinearLayout
-                        android:layout_weight="1"
-                        android:orientation="vertical"
                         android:layout_margin="5dp"
-                        android:background="@color/colorGrey">
-
-                        <ImageView android:id="@+id/humidInforIcon"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/ball_yellow"
-                            android:layout_gravity="center_horizontal"
-                            />
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Độ ẩm"
-                            android:gravity="center_horizontal"
-                            android:layout_marginTop="3dp"/>
-
-                        <TextView android:id="@+id/humidInfor"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="88%"
-                            android:textSize="25dp"
-                            android:gravity="center"
-                            android:layout_marginTop="3dp"
-                            />
-
-                    </LinearLayout>
-
-                    <LinearLayout
                         android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:layout_margin="5dp"
-                        android:background="@color/colorGrey">
-
-                        <ImageView android:id="@+id/UVInforIcon"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/ball_yellow"
-                            android:layout_gravity="center_horizontal"
-                            />
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Chỉ số UV"
-                            android:gravity="center_horizontal"
-                            android:layout_marginTop="3dp"/>
-
-                        <TextView android:id="@+id/UVInfor"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="0"
-                            android:textSize="25dp"
-                            android:gravity="center"
-                            android:layout_marginTop="3dp"
-                            />
-
-                    </LinearLayout>
-                </TableRow>
-                <TableRow>
-                    <LinearLayout
-                        android:orientation="vertical"
-                        android:layout_weight="1"
-                        android:layout_margin="5dp"
-                        android:background="@color/colorGrey">
-
-                        <ImageView android:id="@+id/visibleInforIcon"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/ball_yellow"
-                            android:layout_gravity="center_horizontal"
-                            />
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Tầm nhìn"
-                            android:gravity="center_horizontal"
-                            android:layout_marginTop="3dp"/>
-
-                        <TextView android:id="@+id/visibleInfor"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="10 km"
-                            android:textSize="25dp"
-                            android:gravity="center"
-                            android:layout_marginTop="3dp"
-                            />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:orientation="vertical"
-                        android:layout_weight="1"
-                        android:layout_margin="5dp"
-                        android:background="@color/colorGrey">
-
-                        <ImageView android:id="@+id/dew-pointInforIcon"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/ball_yellow"
-                            android:layout_gravity="center_horizontal"
-                            />
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Điểm sương"
-                            android:gravity="center_horizontal"
-                            android:layout_marginTop="3dp"/>
-
-                        <TextView android:id="@+id/dew-pointInfor"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="25*C"
-                            android:textSize="25dp"
-                            android:gravity="center"
-                            android:layout_marginTop="3dp"
-                            />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:layout_margin="5dp"
                         android:background="@color/colorGrey"
-                        >
+                        android:orientation="vertical">
 
-                        <ImageView android:id="@+id/pressureInforIcon"
+                        <ImageView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/ball_yellow"
                             android:layout_gravity="center_horizontal"
-                            />
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="5dp"
+                            android:src="@drawable/temperature_icon" />
+
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Áp suất"
+                            android:layout_marginTop="3dp"
                             android:gravity="center_horizontal"
-                            android:layout_marginTop="3dp"/>
+                            android:text="Cảm giác như" />
 
-                        <TextView android:id="@+id/pressureInfor"
+                        <TextView
+                            android:id="@+id/tempInfor"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="1005 mb"
-                            android:textSize="25dp"
-                            android:gravity="center"
                             android:layout_marginTop="3dp"
-                            />
+                            android:gravity="center"
+                            android:textSize="25dp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_margin="5dp"
+                        android:layout_weight="1"
+                        android:background="@color/colorGrey"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="5dp"
+                            android:src="@drawable/humidity_icon" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="3dp"
+                            android:gravity="center_horizontal"
+                            android:text="Độ ẩm" />
+
+                        <TextView
+                            android:id="@+id/humidInfor"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="3dp"
+                            android:gravity="center"
+                            android:textSize="25dp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_margin="5dp"
+                        android:layout_weight="1"
+                        android:background="@color/colorGrey"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="5dp"
+                            android:src="@drawable/uv_icon" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="3dp"
+                            android:gravity="center_horizontal"
+                            android:text="Chỉ số UV" />
+
+                        <TextView
+                            android:id="@+id/UVInfor"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="3dp"
+                            android:gravity="center"
+                            android:textSize="25dp" />
+
                     </LinearLayout>
                 </TableRow>
-        </TableLayout>
 
+                <TableRow>
+
+                    <LinearLayout
+                        android:layout_margin="5dp"
+                        android:layout_weight="1"
+                        android:background="@color/colorGrey"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="5dp"
+                            android:src="@drawable/visibility_icon" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="3dp"
+                            android:gravity="center_horizontal"
+                            android:text="Tầm nhìn" />
+
+                        <TextView
+                            android:id="@+id/visibleInfor"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="3dp"
+                            android:gravity="center"
+                            android:textSize="25dp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_margin="5dp"
+                        android:layout_weight="1"
+                        android:background="@color/colorGrey"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="5dp"
+                            android:src="@drawable/dew_icon" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="3dp"
+                            android:gravity="center_horizontal"
+                            android:text="Điểm sương" />
+
+                        <TextView
+                            android:id="@+id/dew_pointInfor"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="3dp"
+                            android:gravity="center"
+                            android:text="*C"
+                            android:textSize="25dp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_margin="5dp"
+                        android:layout_weight="1"
+                        android:background="@color/colorGrey"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="5dp"
+                            android:src="@drawable/pressure_icon" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="3dp"
+                            android:gravity="center_horizontal"
+                            android:text="Áp suất" />
+
+                        <TextView
+                            android:id="@+id/pressureInfor"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="3dp"
+                            android:gravity="center"
+                            android:textSize="25dp" />
+                    </LinearLayout>
+                </TableRow>
+            </TableLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Chỉ số không khí"
+                    android:textSize="18dp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/aqi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:gravity="center_horizontal"
+
+                        android:text="No data"
+                        android:textSize="50dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="10dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/shortphase"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="No data"
+                            android:textSize="20dp" />
+
+                        <TextView
+                            android:id="@+id/longphase"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:text="No data" />
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="29dp"
+                        android:src="@drawable/progress" />
+
+                    <ProgressBar
+                        android:id="@+id/determinateBar"
+                        style="@android:style/Widget.ProgressBar.Horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="0dp"
+                        android:progress="0" />
+                </LinearLayout>
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 
