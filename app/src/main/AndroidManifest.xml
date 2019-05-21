@@ -18,20 +18,20 @@
 
 
         <activity android:name=".Main2Activity"></activity>
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".MainActivity"> <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter></activity>
 
         <activity android:name=".SearchActivity">
 
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
         </activity>
 
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyACal78i2nF2_Gd5QCSVGkt_R4kobG800M"/>
+            android:value="AIzaSyACA-pgsGA9kuRFC3GgQLJSiebGUnnZM8Q"/>
 
 
     </application>
