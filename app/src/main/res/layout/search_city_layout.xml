@@ -7,48 +7,34 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <!--<LinearLayout android:orientation="horizontal"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginTop="5dp">-->
-
-            <!--<ImageButton-->
-                <!--android:layout_width="32dp"-->
-                <!--android:layout_height="32dp"-->
-                <!--android:src="@drawable/back"-->
-                <!--android:scaleX="0.5"-->
-                <!--android:scaleY="0.5"-->
-
-                <!--android:background="#00000000"/>-->
-
-            <!--<EditText android:id="@+id/inputLocation"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:hint="Input location..."-->
-                <!--android:background="#00000000"-->
-                <!--android:maxLines="1"-->
-                <!--android:layout_marginRight="10dp"/>-->
-
-        <!--</LinearLayout>-->
-
-        <!--<AutoCompleteTextView android:id="@+id/hint"-->
-            <!--android:layout_width="fill_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginTop="3dp"-->
-            <!--android:background="#00000000"/>-->
-
-        <fragment android:id="@+id/autocomplete_fragment"
+        <LinearLayout android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
-            />
+            android:layout_marginTop="5dp">
 
-        <!--<fragment-->
-            <!--android:id="@+id/place_autocomplete_fragment"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"-->
-            <!--/>-->
+            <ImageButton
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/back"
+                android:scaleX="0.5"
+                android:scaleY="0.5"
+
+                android:background="#00000000"/>
+
+            <EditText android:id="@+id/inputLocation"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="Input location..."
+                android:background="#00000000"
+                android:maxLines="1"
+                android:layout_marginRight="10dp"/>
+        </LinearLayout>
+        <Button
+            android:id="@+id/btnSearch"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Search"/>
+
     </LinearLayout>
 
 
