@@ -106,38 +106,46 @@ public class MainActivity extends AppCompatActivity {
         anhXa();
         boolean internetAvailable = checkNetwork();
         if(internetAvailable) {
+            Intent intent = getIntent();
+            if(intent!=null){
+                String city = intent.getStringExtra("city");
+                getCurrentData(city);
+                get24hoursData(city);
+                getLocationKey(city);
+                getIndexAir(city);
+            }else{
+                locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
-            locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+                listener = new LocationListener() {
+                    @Override
+                    public void onLocationChanged(Location location) {
+                        double lon = location.getLongitude();
+                        Log.d("kinhdo",""+lon);
+                        double lat = location.getLatitude();
+                        Log.d("kinhdo",""+lat);
+                        getInforFromGPS(lat,lon);
+                    }
 
-            listener = new LocationListener() {
-                @Override
-                public void onLocationChanged(Location location) {
-                    double lon = location.getLongitude();
-                    Log.d("kinhdo",""+lon);
-                    double lat = location.getLatitude();
-                    Log.d("kinhdo",""+lat);
-                    getInforFromGPS(lat,lon);
-                }
+                    @Override
+                    public void onStatusChanged(String s, int i, Bundle bundle) {
 
-                @Override
-                public void onStatusChanged(String s, int i, Bundle bundle) {
+                    }
 
-                }
+                    @Override
+                    public void onProviderEnabled(String s) {
 
-                @Override
-                public void onProviderEnabled(String s) {
+                    }
 
-                }
+                    @Override
+                    public void onProviderDisabled(String s) {
 
-                @Override
-                public void onProviderDisabled(String s) {
-
-                    Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                    startActivity(i);
-                }
-            };
-            configure_button();
-            getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+                        Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        startActivity(i);
+                    }
+                };
+                configure_button();
+                getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+            }
         }
 
 

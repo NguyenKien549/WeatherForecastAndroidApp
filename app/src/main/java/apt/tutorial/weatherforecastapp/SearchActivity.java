@@ -5,10 +5,15 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -28,8 +33,11 @@ public class SearchActivity extends  AppCompatActivity {
 
     RequestQueue requestQueue;
     Button btnSearch;
+    ListView cityList;
     EditText inputLocation;
     ArrayList<City> searchResultCity;
+    SearchAdapter searchAdapter;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,7 +52,11 @@ public class SearchActivity extends  AppCompatActivity {
 
         btnSearch = findViewById(R.id.btnSearch);
         inputLocation = findViewById(R.id.inputLocation);
+        cityList = findViewById(R.id.cityList);
         searchResultCity = new ArrayList<>();
+        searchAdapter = new SearchAdapter(SearchActivity.this,R.layout.city_layout,searchResultCity);
+
+        cityList.setAdapter(searchAdapter);
 
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,10 +67,26 @@ public class SearchActivity extends  AppCompatActivity {
             }
         });
 
+        cityList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                City city = searchResultCity.get(position);
+
+                Toast.makeText(SearchActivity.this,"city: "+city.getCity()+", "+city.getCountry(),Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(SearchActivity.this,MainActivity.class);
+                intent.putExtra("city",city.getCity());
+                startActivity(intent);
+
+            }
+
+
+        });
 
     }
 
     private void getCityList(String key) {
+        searchAdapter.clear();
         String[] arrKey = key.split(" ");
         String handledKey = "";
         if(arrKey.length > 1){
@@ -67,11 +95,12 @@ public class SearchActivity extends  AppCompatActivity {
                 handledKey = handledKey.concat("%20");
                 handledKey = handledKey.concat(arrKey[i]);
             }
+
         }else{
             handledKey=key;
         }
         requestQueue = Volley.newRequestQueue(SearchActivity.this);
-        String url = "http://dataservice.accuweather.com/locations/v1/cities/autocomplete?apikey=kGTDuDorZs1s2xFRoeQZbwX1DcHMfrDn&q="+handledKey+"";
+        String url = "http://dataservice.accuweather.com/locations/v1/cities/autocomplete?apikey=iWk88SAOPAo4Iz3IwgDIjttJXwGntpPR&q="+handledKey+"";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
@@ -86,7 +115,7 @@ public class SearchActivity extends  AppCompatActivity {
                                 String country = jsonObject.getJSONObject("Country").getString("LocalizedName");
                                 String resultCity = jsonObject.getJSONObject("AdministrativeArea").getString("LocalizedName");
                                 City city = new City(key,searchResult,country,resultCity);
-                                searchResultCity.add(city);
+                                searchAdapter.add(city);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -103,5 +132,6 @@ public class SearchActivity extends  AppCompatActivity {
                 });
         requestQueue.add(stringRequest);
     }
+
 
 }
