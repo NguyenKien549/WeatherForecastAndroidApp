@@ -8,16 +8,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
-
 import java.util.ArrayList;
 
-public class DailyAdapter extends RecyclerView.Adapter<DailyAdapter.ViewHolder> {
+public class Daily5Adapter extends RecyclerView.Adapter<Daily5Adapter.ViewHolder> {
 
         ArrayList<Daily> list;
         Context context;
 
-public DailyAdapter(ArrayList<Daily> list, Context context) {
+public Daily5Adapter(ArrayList<Daily> list, Context context) {
         this.list = list;
         this.context = context;
         }

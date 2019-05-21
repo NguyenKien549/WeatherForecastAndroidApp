@@ -17,12 +17,12 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v4.app.ActivityCompat;
 
-import android.graphics.Color;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -53,9 +53,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-import java.util.List;
-
-
 
 public class MainActivity extends AppCompatActivity {
 
@@ -81,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
     TextView shortphase;
     TextView longphase;
     ProgressBar determinateBar;
+    ImageButton list10days;
 
     ArrayList<OneHourInfo> listModel = null;
 
@@ -146,6 +144,7 @@ public class MainActivity extends AppCompatActivity {
                 configure_button();
                 getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
             }
+
         }
 
 
@@ -188,13 +187,22 @@ public class MainActivity extends AppCompatActivity {
                             JSONObject jsonObject = new JSONObject(response);
                             JSONObject jsonObject1=jsonObject.getJSONObject("AdministrativeArea");
 
-                            String city=jsonObject1.getString("LocalizedName");
+                            final String city=jsonObject1.getString("LocalizedName");
                             Log.d("namecity",""+city);
                             getCurrentData(city);
                             get24hoursData(city);
                             getLocationKey(city);
                             getIndexAir(city);
 
+                            //chuyển sang view list 10 days
+                            list10days.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent intent=new Intent(MainActivity.this,Main2Activity.class);
+                                    intent.putExtra("city",city);
+                                    startActivity(intent);
+                                }
+                            });
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -270,8 +278,8 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(false);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false);
         recyclerView.setLayoutManager(layoutManager);
-        DailyAdapter dailyAdapter = new DailyAdapter(dailyArrayList,MainActivity.this);
-        recyclerView.setAdapter(dailyAdapter);
+        Daily5Adapter daily5Adapter = new Daily5Adapter(dailyArrayList,MainActivity.this);
+        recyclerView.setAdapter(daily5Adapter);
     }
 
     private void get24hoursData(String city) {
@@ -362,7 +370,10 @@ public class MainActivity extends AppCompatActivity {
                                     +icon+".png").into(currentStateIcon);
 
                             JSONObject jsonObjectMain = jsonObject.getJSONObject("main");
+
+                            //+3???
                             int temp = jsonObjectMain.getInt("temp")+3;
+
                             int pressure = jsonObjectMain.getInt("pressure");
 
                             int humidity = jsonObjectMain.getInt("humidity");
@@ -590,6 +601,7 @@ public class MainActivity extends AppCompatActivity {
         shortphase=(TextView)findViewById(R.id.shortphase);
         longphase=(TextView)findViewById(R.id.longphase);
         determinateBar=(ProgressBar)findViewById(R.id.determinateBar);
+        list10days=(ImageButton)findViewById(R.id.list10days);
 
         listModel = new ArrayList<>();
         dailyArrayList=new ArrayList<>();
