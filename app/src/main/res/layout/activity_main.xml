@@ -180,14 +180,19 @@
                         android:layout_marginRight="5dp" />
                 </LinearLayout>
 
-                <android.support.v7.widget.RecyclerView
-
-                    android:id="@+id/recycler5days"
+                <TableLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="4dp"
-                    android:scrollbars="none" />
+                    android:layout_height="wrap_content">
+                    <TableRow>
+                        <android.support.v7.widget.RecyclerView
 
+                            android:id="@+id/recycler5days"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginBottom="4dp"
+                            android:scrollbars="none" />
+                    </TableRow>
+                </TableLayout>
 
             </LinearLayout>
 
@@ -212,6 +217,7 @@
                 <TableRow>
 
                     <LinearLayout
+                        android:layout_width="75dp"
                         android:layout_margin="5dp"
                         android:layout_weight="1"
                         android:background="@color/colorGrey"
@@ -223,6 +229,8 @@
                             android:layout_gravity="center_horizontal"
                             android:layout_marginTop="5dp"
                             android:layout_marginBottom="5dp"
+                            android:scaleY="0.8"
+                            android:scaleX="0.8"
                             android:src="@drawable/temperature_icon" />
 
                         <TextView
@@ -243,6 +251,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:layout_width="75dp"
                         android:layout_margin="5dp"
                         android:layout_weight="1"
                         android:background="@color/colorGrey"
@@ -254,6 +263,8 @@
                             android:layout_gravity="center_horizontal"
                             android:layout_marginTop="5dp"
                             android:layout_marginBottom="5dp"
+                            android:scaleY="0.8"
+                            android:scaleX="0.8"
                             android:src="@drawable/humidity_icon" />
 
                         <TextView
@@ -274,6 +285,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:layout_width="75dp"
                         android:layout_margin="5dp"
                         android:layout_weight="1"
                         android:background="@color/colorGrey"
@@ -285,6 +297,8 @@
                             android:layout_gravity="center_horizontal"
                             android:layout_marginTop="5dp"
                             android:layout_marginBottom="5dp"
+                            android:scaleY="0.8"
+                            android:scaleX="0.8"
                             android:src="@drawable/uv_icon" />
 
                         <TextView
@@ -319,7 +333,9 @@
                             android:layout_gravity="center_horizontal"
                             android:layout_marginTop="5dp"
                             android:layout_marginBottom="5dp"
-                            android:src="@drawable/visibility_icon" />
+                            android:src="@drawable/visibility_icon"
+                            android:scaleY="0.8"
+                            android:scaleX="0.8"/>
 
                         <TextView
                             android:layout_width="match_parent"
@@ -350,6 +366,8 @@
                             android:layout_gravity="center_horizontal"
                             android:layout_marginTop="5dp"
                             android:layout_marginBottom="5dp"
+                            android:scaleY="0.8"
+                            android:scaleX="0.8"
                             android:src="@drawable/dew_icon" />
 
                         <TextView
@@ -381,6 +399,8 @@
                             android:layout_gravity="center_horizontal"
                             android:layout_marginTop="5dp"
                             android:layout_marginBottom="5dp"
+                            android:scaleY="0.8"
+                            android:scaleX="0.8"
                             android:src="@drawable/pressure_icon" />
 
                         <TextView

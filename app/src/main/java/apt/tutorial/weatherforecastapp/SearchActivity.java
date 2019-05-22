@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -31,7 +32,8 @@ import java.util.ArrayList;
 public class SearchActivity extends  AppCompatActivity {
 
     RequestQueue requestQueue;
-    Button btnSearch;
+    ImageButton btnSearch;
+    ImageButton backSearch;
     ListView cityList;
     EditText inputLocation;
     ArrayList<City> searchResultCity;
@@ -50,6 +52,7 @@ public class SearchActivity extends  AppCompatActivity {
         }
 
         btnSearch = findViewById(R.id.btnSearch);
+        backSearch = findViewById(R.id.backSearch);
         inputLocation = findViewById(R.id.inputLocation);
         cityList = findViewById(R.id.cityList);
         searchResultCity = new ArrayList<>();
@@ -63,6 +66,13 @@ public class SearchActivity extends  AppCompatActivity {
                 String key = inputLocation.getText().toString();
                 Log.d("myLog","key: "+key);
                 getCityList(key);
+            }
+        });
+
+        backSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
             }
         });
 
@@ -88,15 +98,17 @@ public class SearchActivity extends  AppCompatActivity {
         searchAdapter.clear();
         String[] arrKey = key.split(" ");
         String handledKey = "";
-        if(arrKey.length > 1){
+        if(arrKey.length ==1){
+            handledKey=key;
+        }else if(arrKey.length > 1){
             handledKey = handledKey.concat(arrKey[0]);
             for (int i=1 ; i< arrKey.length; i++){
                 handledKey = handledKey.concat("%20");
                 handledKey = handledKey.concat(arrKey[i]);
             }
-
         }else{
-            handledKey=key;
+            Toast.makeText(this,"Input not empty. Try again!!!",Toast.LENGTH_LONG).show();
+            return;
         }
         requestQueue = Volley.newRequestQueue(SearchActivity.this);
         String url = "http://dataservice.accuweather.com/locations/v1/cities/autocomplete?apikey=kGTDuDorZs1s2xFRoeQZbwX1DcHMfrDn&q="+handledKey+"";
