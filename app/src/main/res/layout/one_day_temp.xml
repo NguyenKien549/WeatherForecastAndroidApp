@@ -3,7 +3,9 @@
     android:layout_width="70dp"
     android:layout_height="wrap_content"
     android:layout_marginLeft="2dp"
+
     android:background="@color/colorBlue"
+
     android:orientation="vertical">
 
     <TextView android:id="@+id/dailyDes"
@@ -12,14 +14,17 @@
         android:textColor="@color/colorDes"
         android:gravity="center_horizontal"
         android:text="mưa nhỏ"
-        android:textSize="10dp" />
+        android:textSize="12dp" />
 
-    <ImageView android:id="@+id/dailyIcon"
+    <ImageView
+        android:id="@+id/dailyIcon"
+        android:scaleX="1.5"
+        android:scaleY="1.5"
         android:layout_width="40dp"
         android:layout_height="30dp"
-        android:layout_margin="20dp"
-
         android:layout_gravity="center"
+
+        android:layout_margin="20dp"
 
         android:src="@drawable/sun" />
 
@@ -29,5 +34,5 @@
 
         android:gravity="center_horizontal"
         android:text="Th 2"
-        android:textSize="12dp" />
+        android:textSize="15dp" />
 </LinearLayout>

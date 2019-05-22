@@ -1,6 +1,7 @@
 package apt.tutorial.weatherforecastapp;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -13,6 +14,7 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v4.app.ActivityCompat;
@@ -20,10 +22,12 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -79,6 +83,10 @@ public class MainActivity extends AppCompatActivity {
     TextView longphase;
     ProgressBar determinateBar;
     ImageButton list10days;
+    TextView cityBar;
+    ImageButton search;
+    View view;
+    LinearLayout bgApp;
 
     ArrayList<OneHourInfo> listModel = null;
 
@@ -92,6 +100,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
+        getSupportActionBar().setCustomView(R.layout.custom_action_bar);
+         view=getSupportActionBar().getCustomView();
+         Log.d("custom",""+(view!=null));
+
 
         if (android.os.Build.VERSION.SDK_INT > 9)
         {
@@ -102,16 +116,39 @@ public class MainActivity extends AppCompatActivity {
 
         //map component in main.xml
         anhXa();
+
+
         boolean internetAvailable = checkNetwork();
         if(internetAvailable) {
             Intent intent = getIntent();
-            if(intent!=null){
-                String city = intent.getStringExtra("city");
+            if(intent.getStringExtra("city")!=null){
+                Log.d("MyLogaa","aaaa"+intent.getStringExtra("city"));
+                final String city = intent.getStringExtra("city");
                 getCurrentData(city);
                 get24hoursData(city);
                 getLocationKey(city);
                 getIndexAir(city);
+
+                search.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent=new Intent(MainActivity.this, SearchActivity.class);
+                        startActivity(intent);
+                    }
+                });
+                
+
+                //chuyển sang view list 10 days
+                list10days.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent=new Intent(MainActivity.this,Main2Activity.class);
+                        intent.putExtra("city",city);
+                        startActivity(intent);
+                    }
+                });
             }else{
+                Log.d("MyLogb","a");
                 locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
                 listener = new LocationListener() {
@@ -142,7 +179,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 };
                 configure_button();
-                getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+
             }
 
         }
@@ -177,7 +214,7 @@ public class MainActivity extends AppCompatActivity {
     private void getInforFromGPS(double lat, double lon) {
         Log.d("myLog", "location infor ");
         requestQueue = Volley.newRequestQueue(MainActivity.this);
-        String url = "http://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=iWk88SAOPAo4Iz3IwgDIjttJXwGntpPR&q="+lat+"%2C"+lon+"&language=en-us&details=true&toplevel=true";
+        String url = "http://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=kGTDuDorZs1s2xFRoeQZbwX1DcHMfrDn&q="+lat+"%2C"+lon+"&language=en-us&details=true&toplevel=true";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
@@ -194,6 +231,13 @@ public class MainActivity extends AppCompatActivity {
                             getLocationKey(city);
                             getIndexAir(city);
 
+                            search.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent intent=new Intent(MainActivity.this,SearchActivity.class);
+                                    startActivity(intent);
+                                }
+                            });
                             //chuyển sang view list 10 days
                             list10days.setOnClickListener(new View.OnClickListener() {
                                 @Override
@@ -203,6 +247,7 @@ public class MainActivity extends AppCompatActivity {
                                     startActivity(intent);
                                 }
                             });
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -326,7 +371,7 @@ public class MainActivity extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.d("myLog","get data fail 24h");
+                        Log.d("myLog","get data fail 24h"+error);
                     }
                 });
         requestQueue.add(stringRequest);
@@ -357,6 +402,7 @@ public class MainActivity extends AppCompatActivity {
 
                             String name = jsonObject.getString("name");
                             currentCity.setText(name);
+                            cityBar.setText(name);
 
                             JSONArray jsonArrayWeather = jsonObject.getJSONArray("weather");
                             JSONObject jsonObjectWeather = jsonArrayWeather.getJSONObject(0);
@@ -364,6 +410,15 @@ public class MainActivity extends AppCompatActivity {
                             String status = jsonObjectWeather.getString("main");
 
                             currentState.setText(status);
+
+                            switch (status){
+                                case "Clouds": bgApp.setBackground(ContextCompat.getDrawable(MainActivity.this,R.drawable.rain)); break;
+//                                case "Clear": bgApp.setBackground(ContextCompat.getDrawable(MainActivity.this,R.drawable.clear)); break;
+//                                case "Rain": case"Drizzle":bgApp.setBackground(ContextCompat.getDrawable(MainActivity.this,R.drawable.rain)); break;
+//                                case "Thunderstorm": bgApp.setBackground(ContextCompat.getDrawable(MainActivity.this,R.drawable.storm)); break;
+//                                default:bgApp.setBackground(ContextCompat.getDrawable(MainActivity.this,R.drawable.mist)); break;
+
+                            }
 
                             String icon = jsonObjectWeather.getString("icon");
                             Log.d("myLog", "onResponse: "+icon);
@@ -374,16 +429,16 @@ public class MainActivity extends AppCompatActivity {
 
                             //+3???
                             int temp = jsonObjectMain.getInt("temp");
-                            int min = jsonObjectMain.getInt("temp_min");
-                            int max = jsonObjectMain.getInt("temp_max");
+//                            int min = jsonObjectMain.getInt("temp_min");
+//                            int max = jsonObjectMain.getInt("temp_max");
                             int pressure = jsonObjectMain.getInt("pressure");
 
                             int humidity = jsonObjectMain.getInt("humidity");
                             int visibility = jsonObject.getInt("visibility");
 
                             currentTemp.setText(temp+"°C");
-                            minTemp.setText(min+"°");
-                            maxTemp.setText(max+"°");
+//                            minTemp.setText(min+"°");
+//                            maxTemp.setText(max+"°");
 
                             tempInfor.setText(temp+"°C");
                             pressureInfor.setText(pressure+" mb");
@@ -465,7 +520,7 @@ public class MainActivity extends AppCompatActivity {
     private void getFiveDays(String locationKey){
 
             requestQueue = Volley.newRequestQueue(MainActivity.this);
-            String url = "http://dataservice.accuweather.com/forecasts/v1/daily/5day/"+locationKey+"?apikey=iWk88SAOPAo4Iz3IwgDIjttJXwGntpPR&language=vi-vn&details=true&metric=true";
+            String url = "http://dataservice.accuweather.com/forecasts/v1/daily/5day/"+locationKey+"?apikey=kGTDuDorZs1s2xFRoeQZbwX1DcHMfrDn&language=vi-vn&details=true&metric=true";
 
             StringRequest stringRequest= new StringRequest(Request.Method.GET, url,
                     new Response.Listener<String>() {
@@ -606,6 +661,13 @@ public class MainActivity extends AppCompatActivity {
         longphase=(TextView)findViewById(R.id.longphase);
         determinateBar=(ProgressBar)findViewById(R.id.determinateBar);
         list10days=(ImageButton)findViewById(R.id.list10days);
+        bgApp=findViewById(R.id.bgApp);
+
+
+//        LayoutInflater inflater=getLayoutInflater();
+//        View custombar=inflater.inflate(R.layout.custom_action_bar,null);
+        cityBar=view.findViewById(R.id.cityBar);
+        search=view.findViewById(R.id.search);
 
         listModel = new ArrayList<>();
         dailyArrayList=new ArrayList<>();

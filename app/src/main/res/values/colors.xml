@@ -8,6 +8,7 @@
     <color name="colorAccent">#b3f0ff</color>
     <color name="color5Days">#1f2e2e</color>
     <color name="colorWhite"> #ffffff</color>
+    <color name="trongsuot">#80000000</color>
 
     <!--<color name="transparent">#AARRGGBB</color>-->
 </resources>

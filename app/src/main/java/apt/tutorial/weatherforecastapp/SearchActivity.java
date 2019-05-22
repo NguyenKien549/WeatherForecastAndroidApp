@@ -99,7 +99,7 @@ public class SearchActivity extends  AppCompatActivity {
             handledKey=key;
         }
         requestQueue = Volley.newRequestQueue(SearchActivity.this);
-        String url = "http://dataservice.accuweather.com/locations/v1/cities/autocomplete?apikey=iWk88SAOPAo4Iz3IwgDIjttJXwGntpPR&q="+handledKey+"";
+        String url = "http://dataservice.accuweather.com/locations/v1/cities/autocomplete?apikey=kGTDuDorZs1s2xFRoeQZbwX1DcHMfrDn&q="+handledKey+"";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
