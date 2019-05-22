@@ -362,6 +362,7 @@ public class MainActivity extends AppCompatActivity {
                             JSONObject jsonObjectWeather = jsonArrayWeather.getJSONObject(0);
 
                             String status = jsonObjectWeather.getString("main");
+
                             currentState.setText(status);
 
                             String icon = jsonObjectWeather.getString("icon");
@@ -372,14 +373,17 @@ public class MainActivity extends AppCompatActivity {
                             JSONObject jsonObjectMain = jsonObject.getJSONObject("main");
 
                             //+3???
-                            int temp = jsonObjectMain.getInt("temp")+3;
-
+                            int temp = jsonObjectMain.getInt("temp");
+                            int min = jsonObjectMain.getInt("temp_min");
+                            int max = jsonObjectMain.getInt("temp_max");
                             int pressure = jsonObjectMain.getInt("pressure");
 
                             int humidity = jsonObjectMain.getInt("humidity");
                             int visibility = jsonObject.getInt("visibility");
 
                             currentTemp.setText(temp+"°C");
+                            minTemp.setText(min+"°");
+                            maxTemp.setText(max+"°");
 
                             tempInfor.setText(temp+"°C");
                             pressureInfor.setText(pressure+" mb");
@@ -586,7 +590,7 @@ public class MainActivity extends AppCompatActivity {
     private void anhXa(){
         currentTemp = (TextView) findViewById(R.id.currentTemp);
         maxTemp = (TextView) findViewById(R.id.maxTemp);
-        minTemp  = (TextView) findViewById(R.id.minTemp);
+        minTemp  = findViewById(R.id.minTemp);
         currentStateIcon  = (ImageView) findViewById(R.id.currentStateIcon);
         currentDate  = (TextView) findViewById(R.id.currentDate);
         currentCity  = (TextView) findViewById(R.id.currentCity);
