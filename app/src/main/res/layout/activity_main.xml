@@ -161,8 +161,8 @@
                         android:id="@+id/list10days"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="240dp"
-                        android:src="@drawable/ic_chevron_right_black_24dp"
+                        android:layout_marginLeft="235dp"
+                        android:src="@drawable/ic_play_circle_outline_black_24dp"
 
                         />
                 </LinearLayout>
@@ -173,9 +173,10 @@
 
                     <com.github.mikephil.charting.charts.LineChart
                         android:id="@+id/line_chart"
+
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_marginLeft="15dp"
+                        android:layout_marginLeft="10dp"
                         android:layout_marginRight="5dp" />
                 </LinearLayout>
 

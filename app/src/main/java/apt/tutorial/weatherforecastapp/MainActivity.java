@@ -262,15 +262,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setChart(ArrayList<Daily> dailyArrayList){
-        getSupportActionBar().setDisplayShowCustomEnabled(true);
-        getSupportActionBar().setCustomView(R.layout.custom_action_bar);
+//        getSupportActionBar().setDisplayShowCustomEnabled(true);
+//        getSupportActionBar().setCustomView(R.layout.custom_action_bar);
 
         mpLineChart=(LineChart)findViewById(R.id.line_chart);
         LineDataSet lineDataSet1=new LineDataSet(dataValues1(dailyArrayList),"");
+        lineDataSet1.setValueTextSize(12);
+//        lineDataSet1.setValueTextColor(000000);
         LineDataSet lineDataSet2=new LineDataSet(dataValues2(dailyArrayList),"");
+        lineDataSet2.setValueTextSize(12);
         ArrayList<ILineDataSet> dataSets=new ArrayList<>();
         dataSets.add(lineDataSet1);
+
         dataSets.add(lineDataSet2);
+
 //        mpLineChart.setBackgroundColor(Color.BLUE);
         mpLineChart.setDrawGridBackground(false);
         mpLineChart.setDrawBorders(false);
@@ -290,6 +295,8 @@ public class MainActivity extends AppCompatActivity {
         Description des=new Description();
         des.setText("");
         mpLineChart.setDescription(des);
+
+
 
         LineData data=new LineData(dataSets);
         data.setValueFormatter(new MyValueFormat());
@@ -695,7 +702,7 @@ public class MainActivity extends AppCompatActivity {
     private  class MyValueFormat implements IValueFormatter{
         @Override
         public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
-            return value+" °C";
+            return (int)value+" °C";
         }
     }
 

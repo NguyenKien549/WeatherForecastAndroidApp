@@ -62,7 +62,7 @@ public class Main2Activity extends AppCompatActivity {
     private void getTenDays(String city){
 
        RequestQueue requestQueue = Volley.newRequestQueue(Main2Activity.this);
-        String url = "https://api.weatherbit.io/v2.0/forecast/daily?city="+city+"&key=d629fbdd82ca403899f2eb5fe13ce92f";
+        String url = "https://api.weatherbit.io/v2.0/forecast/daily?city="+city+"&key=d629fbdd82ca403899f2eb5fe13ce92f&days=10";
 
         StringRequest stringRequest= new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
