@@ -103,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setDisplayShowCustomEnabled(true);
         getSupportActionBar().setCustomView(R.layout.custom_action_bar);
+
          view=getSupportActionBar().getCustomView();
          Log.d("custom",""+(view!=null));
 

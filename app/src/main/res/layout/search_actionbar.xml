@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <TableRow>
+        <TextView
+            android:id="@+id/cityBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:text="Search"
+            android:layout_weight="4"
+            android:textSize="32dp" />
+    </TableRow>
+</TableLayout>

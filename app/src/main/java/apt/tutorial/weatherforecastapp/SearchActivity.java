@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
@@ -44,6 +45,9 @@ public class SearchActivity extends  AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.search_city_layout);
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
+        getSupportActionBar().setCustomView(R.layout.search_actionbar);
 
         if (android.os.Build.VERSION.SDK_INT > 9) {
             StrictMode.ThreadPolicy policy = new
@@ -98,7 +102,10 @@ public class SearchActivity extends  AppCompatActivity {
         searchAdapter.clear();
         String[] arrKey = key.split(" ");
         String handledKey = "";
-        if(arrKey.length ==1){
+        if(key.trim().equals("")){
+            Toast.makeText(this,"Input not empty. Try again!!!",Toast.LENGTH_LONG).show();
+            return;
+        }else if(arrKey.length ==1){
             handledKey=key;
         }else if(arrKey.length > 1){
             handledKey = handledKey.concat(arrKey[0]);
@@ -106,11 +113,7 @@ public class SearchActivity extends  AppCompatActivity {
                 handledKey = handledKey.concat("%20");
                 handledKey = handledKey.concat(arrKey[i]);
             }
-        }else{
-            Toast.makeText(this,"Input not empty. Try again!!!",Toast.LENGTH_LONG).show();
-            return;
-        }
-        requestQueue = Volley.newRequestQueue(SearchActivity.this);
+        }        requestQueue = Volley.newRequestQueue(SearchActivity.this);
         String url = "http://dataservice.accuweather.com/locations/v1/cities/autocomplete?apikey=kGTDuDorZs1s2xFRoeQZbwX1DcHMfrDn&q="+handledKey+"";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
@@ -127,6 +130,9 @@ public class SearchActivity extends  AppCompatActivity {
                                 String resultCity = jsonObject.getJSONObject("AdministrativeArea").getString("LocalizedName");
                                 City city = new City(key,searchResult,country,resultCity);
                                 searchAdapter.add(city);
+                            }
+                            if(searchAdapter.isEmpty()){
+                                Toast.makeText(SearchActivity.this,"Data is empty. Try again!!!",Toast.LENGTH_LONG).show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();

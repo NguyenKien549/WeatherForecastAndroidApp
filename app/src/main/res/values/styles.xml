@@ -7,6 +7,10 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
+    <style name="SearchTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="contentInsetStart">0dp</item>
+        <item name="contentInsetEnd">0dp</item>
+    </style>
 
     <style name="CustomTheme" parent="Theme.AppCompat.DayNight.DarkActionBar">
         <item name="contentInsetStart">0dp</item>
