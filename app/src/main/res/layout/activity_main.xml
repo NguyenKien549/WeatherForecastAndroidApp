@@ -181,7 +181,6 @@
 
                     <com.github.mikephil.charting.charts.LineChart
                         android:id="@+id/line_chart"
-
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginLeft="10dp"
@@ -226,10 +225,11 @@
                 <TableRow>
 
                     <LinearLayout
+
                         android:layout_width="75dp"
                         android:layout_margin="5dp"
                         android:layout_weight="1"
-                        android:background="@color/colorGrey"
+                        android:background="@color/chitiet"
                         android:orientation="vertical">
 
                         <ImageView
@@ -263,7 +263,7 @@
                         android:layout_width="75dp"
                         android:layout_margin="5dp"
                         android:layout_weight="1"
-                        android:background="@color/colorGrey"
+                        android:background="@color/chitiet"
                         android:orientation="vertical">
 
                         <ImageView
@@ -297,7 +297,7 @@
                         android:layout_width="75dp"
                         android:layout_margin="5dp"
                         android:layout_weight="1"
-                        android:background="@color/colorGrey"
+                        android:background="@color/chitiet"
                         android:orientation="vertical">
 
                         <ImageView
@@ -333,7 +333,7 @@
                     <LinearLayout
                         android:layout_margin="5dp"
                         android:layout_weight="1"
-                        android:background="@color/colorGrey"
+                        android:background="@color/chitiet"
                         android:orientation="vertical">
 
                         <ImageView
@@ -366,7 +366,7 @@
                     <LinearLayout
                         android:layout_margin="5dp"
                         android:layout_weight="1"
-                        android:background="@color/colorGrey"
+                        android:background="@color/chitiet"
                         android:orientation="vertical">
 
                         <ImageView
@@ -399,7 +399,7 @@
                     <LinearLayout
                         android:layout_margin="5dp"
                         android:layout_weight="1"
-                        android:background="@color/colorGrey"
+                        android:background="@color/chitiet"
                         android:orientation="vertical">
 
                         <ImageView

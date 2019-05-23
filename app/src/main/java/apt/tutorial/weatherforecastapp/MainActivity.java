@@ -418,11 +418,11 @@ public class MainActivity extends AppCompatActivity {
                             currentState.setText(status);
 
                             switch (status){
-                                case "Clouds": bgApp.setBackground(ContextCompat.getDrawable(MainActivity.this,R.drawable.rain)); break;
-//                                case "Clear": bgApp.setBackground(ContextCompat.getDrawable(MainActivity.this,R.drawable.clear)); break;
-//                                case "Rain": case"Drizzle":bgApp.setBackground(ContextCompat.getDrawable(MainActivity.this,R.drawable.rain)); break;
-//                                case "Thunderstorm": bgApp.setBackground(ContextCompat.getDrawable(MainActivity.this,R.drawable.storm)); break;
-//                                default:bgApp.setBackground(ContextCompat.getDrawable(MainActivity.this,R.drawable.mist)); break;
+                                case "Clouds": bgApp.setBackground(ContextCompat.getDrawable(MainActivity.this,R.drawable.cloud)); break;
+                                case "Clear": bgApp.setBackground(ContextCompat.getDrawable(MainActivity.this,R.drawable.clear)); break;
+                                case "Rain": case"Drizzle":bgApp.setBackground(ContextCompat.getDrawable(MainActivity.this,R.drawable.rain)); break;
+                                case "Thunderstorm": bgApp.setBackground(ContextCompat.getDrawable(MainActivity.this,R.drawable.storm)); break;
+                                default:bgApp.setBackground(ContextCompat.getDrawable(MainActivity.this,R.drawable.mist)); break;
 
                             }
 
@@ -527,7 +527,7 @@ public class MainActivity extends AppCompatActivity {
     private void getFiveDays(String locationKey){
 
             requestQueue = Volley.newRequestQueue(MainActivity.this);
-            String url = "http://dataservice.accuweather.com/forecasts/v1/daily/5day/"+locationKey+"?apikey=kGTDuDorZs1s2xFRoeQZbwX1DcHMfrDn&language=vi-vn&details=true&metric=true";
+            String url = "http://dataservice.accuweather.com/forecasts/v1/daily/5day/"+locationKey+"?apikey=jvPR2DbpPfR3aM3gpxiGK2aBFGB9P84x&language=vi-vn&details=true&metric=true";
 
             StringRequest stringRequest= new StringRequest(Request.Method.GET, url,
                     new Response.Listener<String>() {
