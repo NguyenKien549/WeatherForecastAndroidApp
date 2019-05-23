@@ -10,6 +10,7 @@
     <color name="colorWhite"> #ffffff</color>
     <color name="trongsuot">#80000000</color>
     <color name="black">#000000</color>
+    <color name="chitiet">#99ccff</color>
 
     <!--<color name="transparent">#AARRGGBB</color>-->
 </resources>

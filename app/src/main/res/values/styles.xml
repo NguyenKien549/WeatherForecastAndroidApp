@@ -12,7 +12,7 @@
         <item name="contentInsetEnd">0dp</item>
     </style>
 
-    <style name="CustomTheme" parent="Theme.AppCompat.DayNight.DarkActionBar">
+    <style name="CustomTheme" parent="Theme.AppCompat.Light.DarkActionBar" >
         <item name="contentInsetStart">0dp</item>
         <item name="contentInsetEnd">0dp</item>
     </style>
