@@ -187,19 +187,18 @@
                         android:layout_marginRight="5dp" />
                 </LinearLayout>
 
-                <TableLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <TableRow>
+                <!--<TableLayout-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content">-->
+                    <!--<TableRow>-->
                         <android.support.v7.widget.RecyclerView
-
                             android:id="@+id/recycler5days"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_marginBottom="4dp"
                             android:scrollbars="none" />
-                    </TableRow>
-                </TableLayout>
+                    <!--</TableRow>-->
+                <!--</TableLayout>-->
 
             </LinearLayout>
 
@@ -247,7 +246,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="3dp"
                             android:gravity="center_horizontal"
-                            android:text="Cảm giác như" />
+                            android:text="Feels Like" />
 
                         <TextView
                             android:id="@+id/tempInfor"
@@ -281,7 +280,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="3dp"
                             android:gravity="center_horizontal"
-                            android:text="Độ ẩm" />
+                            android:text="Humidity" />
 
                         <TextView
                             android:id="@+id/humidInfor"
@@ -315,7 +314,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="3dp"
                             android:gravity="center_horizontal"
-                            android:text="Chỉ số UV" />
+                            android:text="UV Index" />
 
                         <TextView
                             android:id="@+id/UVInfor"
@@ -331,6 +330,7 @@
                 <TableRow>
 
                     <LinearLayout
+                        android:layout_width="75dp"
                         android:layout_margin="5dp"
                         android:layout_weight="1"
                         android:background="@color/chitiet"
@@ -351,7 +351,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="3dp"
                             android:gravity="center_horizontal"
-                            android:text="Tầm nhìn" />
+                            android:text="Visibility" />
 
                         <TextView
                             android:id="@+id/visibleInfor"
@@ -364,6 +364,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:layout_width="75dp"
                         android:layout_margin="5dp"
                         android:layout_weight="1"
                         android:background="@color/chitiet"
@@ -384,7 +385,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="3dp"
                             android:gravity="center_horizontal"
-                            android:text="Điểm sương" />
+                            android:text="Dew Point" />
 
                         <TextView
                             android:id="@+id/dew_pointInfor"
@@ -392,11 +393,11 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="3dp"
                             android:gravity="center"
-                            android:text="15°C"
                             android:textSize="20dp" />
                     </LinearLayout>
 
                     <LinearLayout
+                        android:layout_width="75dp"
                         android:layout_margin="5dp"
                         android:layout_weight="1"
                         android:background="@color/chitiet"
@@ -417,7 +418,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="3dp"
                             android:gravity="center_horizontal"
-                            android:text="Áp suất" />
+                            android:text="Pressure" />
 
                         <TextView
                             android:id="@+id/pressureInfor"

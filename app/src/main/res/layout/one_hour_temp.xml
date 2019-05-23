@@ -4,17 +4,16 @@
     android:id="@+id/hourly"
     android:layout_width="70dp"
     android:layout_height="wrap_content"
-    android:background="@color/colorGrey"
-    android:orientation="vertical">
 
+    android:orientation="vertical">
+    <!--android:background="@color/colorGrey"-->
     <TextView
         android:id="@+id/hourlyTemp"
         android:layout_width="70dp"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:text="28*"
-        android:textSize="18dp"
-        android:textColor="#FFFFFF"/>
+        android:textSize="18dp"/>
 
     <ImageView
         android:id="@+id/stateIcon"

@@ -218,7 +218,7 @@ public class MainActivity extends AppCompatActivity {
     private void getInforFromGPS(double lat, double lon) {
         Log.d("myLog", "location infor ");
         requestQueue = Volley.newRequestQueue(MainActivity.this);
-        String url = "http://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=kGTDuDorZs1s2xFRoeQZbwX1DcHMfrDn&q="+lat+"%2C"+lon+"&language=en-us&details=true&toplevel=true";
+        String url = "http://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=iWk88SAOPAo4Iz3IwgDIjttJXwGntpPR&q="+lat+"%2C"+lon+"&language=en-us&details=true&toplevel=true";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
@@ -433,28 +433,19 @@ public class MainActivity extends AppCompatActivity {
 
                             JSONObject jsonObjectMain = jsonObject.getJSONObject("main");
 
-                            //+3???
+
                             int temp = jsonObjectMain.getInt("temp");
-//                            int min = jsonObjectMain.getInt("temp_min");
-//                            int max = jsonObjectMain.getInt("temp_max");
+                            currentTemp.setText(temp+"°C");
+                            tempInfor.setText(temp+"°C");
+
                             int pressure = jsonObjectMain.getInt("pressure");
+                            pressureInfor.setText(pressure+" mb");
 
                             int humidity = jsonObjectMain.getInt("humidity");
-                            int visibility = jsonObject.getInt("visibility");
-
-                            currentTemp.setText(temp+"°C");
-//                            minTemp.setText(min+"°");
-//                            maxTemp.setText(max+"°");
-
-                            tempInfor.setText(temp+"°C");
-                            pressureInfor.setText(pressure+" mb");
                             humidInfor.setText(humidity+"%");
-                            visibleInfor.setText((visibility/1000)+" km");
 
-                            JSONObject jsonObjectCoord = jsonObject.getJSONObject("coord");
-                            String lat = jsonObjectCoord.getString("lat");
-                            String lon = jsonObjectCoord.getString("lon");
-                            setUVInfor(Double.valueOf(lat),Double.valueOf(lon));
+                            int visibility = jsonObject.getInt("visibility");
+                            visibleInfor.setText((visibility/1000)+" km");
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -473,19 +464,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void setUVInfor(double lat, double lon) {
+    private void setUVInfor(String locationKey) {
         requestQueue = Volley.newRequestQueue(MainActivity.this);
-        String url = "https://api.openweathermap.org/data/2.5/uvi?lat="
-                + lat + "&lon=" + lon + "&appid=a294d4f6615e3794f086c469c0258c7b&cnt=1";
+        String url = "https://dataservice.accuweather.com/currentconditions/v1/"+locationKey+"?apikey=jvPR2DbpPfR3aM3gpxiGK2aBFGB9P84x&language=en&details=true";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         Log.d("myLog", "uvInfor " + response);
                         try {
-                            JSONObject jsonObject = new JSONObject(response);
-                            double uv = jsonObject.getDouble("value");
-                            UVInfor.setText(uv + "");
+                            JSONArray jsonArray = new JSONArray(response);
+                            JSONObject jsonObject = jsonArray.getJSONObject(0);
+                            JSONObject dewpointObject = jsonObject.getJSONObject("DewPoint");
+                            JSONObject metric_dewpoint = dewpointObject.getJSONObject("Metric");
+                            int dewpoint = (int) Math.round(metric_dewpoint.getDouble("Value"));
+                            dew_pointInfor.setText(dewpoint + "°C");
+
+                            double uvIndex= jsonObject.getDouble("UVIndex");
+                            UVInfor.setText(uvIndex+"");
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -513,6 +509,7 @@ public class MainActivity extends AppCompatActivity {
                             Log.d("myLog","key"+locationKey);
                              getFiveDays(locationKey);
                              get24hoursData(locationKey);
+                             setUVInfor(locationKey);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
