@@ -56,6 +56,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -98,6 +99,10 @@ public class MainActivity extends AppCompatActivity {
     private LocationListener listener;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //acu key1:iWk88SAOPAo4Iz3IwgDIjttJXwGntpPR tai1
+        //acu key2:kGTDuDorZs1s2xFRoeQZbwX1DcHMfrDn kiên
+        //acu key3:jvPR2DbpPfR3aM3gpxiGK2aBFGB9P84x tai2
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
@@ -126,7 +131,6 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("MyLogaa","aaaa"+intent.getStringExtra("city"));
                 final String city = intent.getStringExtra("city");
                 getCurrentData(city);
-                get24hoursData(city);
                 getLocationKey(city);
                 getIndexAir(city);
 
@@ -228,7 +232,6 @@ public class MainActivity extends AppCompatActivity {
                             final String city=jsonObject1.getString("LocalizedName");
                             Log.d("namecity",""+city);
                             getCurrentData(city);
-                            get24hoursData(city);
                             getLocationKey(city);
                             getIndexAir(city);
 
@@ -335,34 +338,30 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(daily5Adapter);
     }
 
-    private void get24hoursData(String city) {
+    private void get24hoursData(String key) {
         requestQueue = Volley.newRequestQueue(MainActivity.this);
-        String url = "https://api.openweathermap.org/data/2.5/forecast/hourly?q=" +city+
-                "&units=metric&appid=a294d4f6615e3794f086c469c0258c7b";
+        String url = "http://dataservice.accuweather.com/forecasts/v1/hourly/12hour/"+key+"?apikey=jvPR2DbpPfR3aM3gpxiGK2aBFGB9P84x&language=en-us&metric=true";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         Log.d("myLog","get data done 24h");
                         try {
-                            JSONObject jsonObject = new JSONObject(response);
 
-                            JSONArray jsonArray = jsonObject.getJSONArray("list");
-                            for (int i = 0; i<24; i++){
+
+                            JSONArray jsonArray = new JSONArray(response);
+                            for (int i = 0; i<12; i++){
                                 JSONObject inforOneHour = jsonArray.getJSONObject(i);
-                                JSONObject main = inforOneHour.getJSONObject("main");
-                                double temp = main.getDouble("temp");
+                                JSONObject main = inforOneHour.getJSONObject("Temperature");
+                                double temp = main.getDouble("Value");
                                 int tempInt = (int) Math.round(temp);
 
-                                JSONArray weather = inforOneHour.getJSONArray("weather");
-                                JSONObject infoWeather = weather.getJSONObject(0);
-                                String icon = infoWeather.getString("icon");
 
-                                String date = inforOneHour.getString("dt");
-                                Date time = new Date(Long.valueOf(date) * 1000L);
+                                String icon = inforOneHour.getString("WeatherIcon");
 
-                                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
-                                String hour = simpleDateFormat.format(time);
+                                String date = inforOneHour.getString("DateTime");
+                                String hour=date.substring(11,16);
+
 
                                 OneHourInfo oneHourInfo = new OneHourInfo(tempInt,icon,hour);
 
@@ -514,6 +513,7 @@ public class MainActivity extends AppCompatActivity {
                              locationKey=jsonObject.getString("Key");
                             Log.d("myLog","key"+locationKey);
                              getFiveDays(locationKey);
+                             get24hoursData(locationKey);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

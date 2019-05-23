@@ -25,7 +25,7 @@
         android:scaleY="1"
         android:scaleX="1"
         android:layout_gravity="center_horizontal"
-        android:src="@drawable/ball_yellow" />
+        />
 
     <TextView
         android:id="@+id/hourlyTime"
@@ -33,5 +33,5 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:text="24:00"
-        android:textSize="18dp" />
+        android:textSize="16dp" />
 </LinearLayout>
