@@ -7,17 +7,7 @@ public class Daily {
     int icon=0;
     String des=null;
 
-    @Override
-    public String toString() {
-        return "Daily{" +
-                "day='" + day + '\'' +
-                ", minTemp=" + minTemp +
-                ", maxTemp=" + maxTemp +
-                ", icon=" + icon +
-                ", des='" + des + '\'' +
-                '}';
-    }
-
+    //Hàm khởi tạo đối tượng
     public Daily(String day, int minTemp, int maxTemp, int icon, String des) {
         this.day = day;
         this.minTemp = minTemp;
@@ -26,6 +16,7 @@ public class Daily {
         this.des = des;
     }
 
+    //Các hàm getter và setter
     public String getDay() {
         return day;
     }

@@ -62,8 +62,8 @@ public class MainActivity extends AppCompatActivity {
 
     LineChart mpLineChart;
 
-    ArrayList<Daily> dailyArrayList=null;
-    String locationKey=null;
+    ArrayList<Daily> dailyArrayList = null;
+    String locationKey = null;
 
     TextView currentTemp;
     TextView maxTemp;
@@ -96,6 +96,7 @@ public class MainActivity extends AppCompatActivity {
 
     private LocationManager locationManager;
     private LocationListener listener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //acu key1:iWk88SAOPAo4Iz3IwgDIjttJXwGntpPR tai1
@@ -108,12 +109,11 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowCustomEnabled(true);
         getSupportActionBar().setCustomView(R.layout.custom_action_bar);
 
-         view=getSupportActionBar().getCustomView();
-         Log.d("custom",""+(view!=null));
+        view = getSupportActionBar().getCustomView();
+        Log.d("custom", "" + (view != null));
 
 
-        if (android.os.Build.VERSION.SDK_INT > 9)
-        {
+        if (android.os.Build.VERSION.SDK_INT > 9) {
             StrictMode.ThreadPolicy policy = new
                     StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
@@ -124,10 +124,10 @@ public class MainActivity extends AppCompatActivity {
 
 
         boolean internetAvailable = checkNetwork();
-        if(internetAvailable) {
+        if (internetAvailable) {
             Intent intent = getIntent();
-            if(intent.getStringExtra("city")!=null){
-                Log.d("MyLogaa","aaaa"+intent.getStringExtra("city"));
+            if (intent.getStringExtra("city") != null) {
+                Log.d("MyLogaa", "aaaa" + intent.getStringExtra("city"));
                 final String city = intent.getStringExtra("city");
                 getCurrentData(city);
                 getLocationKey(city);
@@ -136,33 +136,34 @@ public class MainActivity extends AppCompatActivity {
                 search.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent=new Intent(MainActivity.this, SearchActivity.class);
+                        Intent intent = new Intent(MainActivity.this, SearchActivity.class);
                         startActivity(intent);
                     }
                 });
-                
+
 
                 //chuyển sang view list 10 days
                 list10days.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent=new Intent(MainActivity.this,Main2Activity.class);
-                        intent.putExtra("city",city);
+                        Intent intent = new Intent(MainActivity.this, Main2Activity.class);
+                        intent.putExtra("city", city);
                         startActivity(intent);
                     }
                 });
-            }else{
-                Log.d("MyLogb","a");
+            } else {
+                //khởi tạo dịch vụ quản lý vị trí
                 locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-
+                //khởi tạo đối tượng listener và thực thi các phương thức abstract
                 listener = new LocationListener() {
+                    //lấy ra tọa độ mới khi vị trí thay đổi
                     @Override
                     public void onLocationChanged(Location location) {
                         double lon = location.getLongitude();
-                        Log.d("kinhdo",""+lon);
+                        Log.d("kinhdo", "" + lon);
                         double lat = location.getLatitude();
-                        Log.d("kinhdo",""+lat);
-                        getInforFromGPS(lat,lon);
+                        Log.d("kinhdo", "" + lat);
+                        getInforFromGPS(lat, lon);
                     }
 
                     @Override
@@ -175,6 +176,7 @@ public class MainActivity extends AppCompatActivity {
 
                     }
 
+                    //cho phép truy cập cài đặt của thiết bị để bật GPS
                     @Override
                     public void onProviderDisabled(String s) {
 
@@ -189,12 +191,11 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-
-
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode){
+        switch (requestCode) {
             case 10:
                 configure_button();
                 break;
@@ -203,22 +204,23 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    void configure_button(){
-        // first check for permissions
+    void configure_button() {
+        // kiểm tra các quyền
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.INTERNET}
-                        ,10);
+                requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.INTERNET}
+                        , 10);
             }
             return;
         }
-        locationManager.requestLocationUpdates("gps", 5000, 100000, listener);
+        //cập nhật vị trí khi thiết bị di chuyển ra ngoài bán kính 10km
+        locationManager.requestLocationUpdates("gps", 5000, 10000, listener);
     }
 
     private void getInforFromGPS(double lat, double lon) {
         Log.d("myLog", "location infor ");
         requestQueue = Volley.newRequestQueue(MainActivity.this);
-        String url = "http://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=iWk88SAOPAo4Iz3IwgDIjttJXwGntpPR&q="+lat+"%2C"+lon+"&language=en-us&details=true&toplevel=true";
+        String url = "http://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=kGTDuDorZs1s2xFRoeQZbwX1DcHMfrDn&q=" + lat + "%2C" + lon + "&language=en-us&details=true&toplevel=true";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
@@ -226,10 +228,10 @@ public class MainActivity extends AppCompatActivity {
                         Log.d("myLog", "location infor " + response);
                         try {
                             JSONObject jsonObject = new JSONObject(response);
-                            JSONObject jsonObject1=jsonObject.getJSONObject("AdministrativeArea");
+                            JSONObject jsonObject1 = jsonObject.getJSONObject("AdministrativeArea");
 
-                            final String city=jsonObject1.getString("LocalizedName");
-                            Log.d("namecity",""+city);
+                            final String city = jsonObject1.getString("LocalizedName");
+                            Log.d("namecity", "" + city);
                             getCurrentData(city);
                             getLocationKey(city);
                             getIndexAir(city);
@@ -237,7 +239,7 @@ public class MainActivity extends AppCompatActivity {
                             search.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    Intent intent=new Intent(MainActivity.this,SearchActivity.class);
+                                    Intent intent = new Intent(MainActivity.this, SearchActivity.class);
                                     startActivity(intent);
                                 }
                             });
@@ -245,8 +247,8 @@ public class MainActivity extends AppCompatActivity {
                             list10days.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    Intent intent=new Intent(MainActivity.this,Main2Activity.class);
-                                    intent.putExtra("city",city);
+                                    Intent intent = new Intent(MainActivity.this, Main2Activity.class);
+                                    intent.putExtra("city", city);
                                     startActivity(intent);
                                 }
                             });
@@ -264,57 +266,48 @@ public class MainActivity extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-    public void setChart(ArrayList<Daily> dailyArrayList){
-//        getSupportActionBar().setDisplayShowCustomEnabled(true);
-//        getSupportActionBar().setCustomView(R.layout.custom_action_bar);
+    //vẽ biểu đồ min max nhiệt độ của 5 ngày
+    public void setChart(ArrayList<Daily> dailyArrayList) {
 
-        mpLineChart=(LineChart)findViewById(R.id.line_chart);
-        LineDataSet lineDataSet1=new LineDataSet(dataValues1(dailyArrayList),"");
+        mpLineChart = (LineChart) findViewById(R.id.line_chart);
+
+        LineDataSet lineDataSet1 = new LineDataSet(dataValues1(dailyArrayList), "");
         lineDataSet1.setValueTextSize(12);
-//        lineDataSet1.setValueTextColor(000000);
-        LineDataSet lineDataSet2=new LineDataSet(dataValues2(dailyArrayList),"");
+        LineDataSet lineDataSet2 = new LineDataSet(dataValues2(dailyArrayList), "");
         lineDataSet2.setValueTextSize(12);
-        ArrayList<ILineDataSet> dataSets=new ArrayList<>();
+        ArrayList<ILineDataSet> dataSets = new ArrayList<>();
         dataSets.add(lineDataSet1);
-
         dataSets.add(lineDataSet2);
 
-//        mpLineChart.setBackgroundColor(Color.BLUE);
         mpLineChart.setDrawGridBackground(false);
         mpLineChart.setDrawBorders(false);
         mpLineChart.getAxisLeft().setDrawGridLines(false);
         mpLineChart.getXAxis().setDrawGridLines(false);
-
         mpLineChart.getAxisRight().setDrawGridLines(false);
         mpLineChart.getXAxis().setDrawGridLines(false);
         mpLineChart.getXAxis().setEnabled(false);
         mpLineChart.getAxisRight().setEnabled(false);
         mpLineChart.getAxisLeft().setEnabled(false);
-
         mpLineChart.getAxisLeft().setDrawAxisLine(false);
         mpLineChart.getAxisRight().setDrawAxisLine(false);
-
         mpLineChart.getLegend().setEnabled(false);
-        Description des=new Description();
+        Description des = new Description();
         des.setText("");
         mpLineChart.setDescription(des);
 
-
-
-        LineData data=new LineData(dataSets);
+        LineData data = new LineData(dataSets);
         data.setValueFormatter(new MyValueFormat());
         mpLineChart.setData(data);
         mpLineChart.invalidate();
     }
 
     private boolean checkNetwork() {
-        ConnectivityManager cm = (ConnectivityManager)getSystemService(CONNECTIVITY_SERVICE);
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
         NetworkInfo info = cm.getActiveNetworkInfo();
         if (info != null) {
             return true;
-        }
-        else {
-            Toast.makeText(this, "Sorry, the Internet is not available",Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(this, "Sorry, the Internet is not available", Toast.LENGTH_LONG).show();
         }
         return false;
     }
@@ -322,34 +315,35 @@ public class MainActivity extends AppCompatActivity {
     private void initRecycleView() {
         recyclerView = (RecyclerView) findViewById(R.id.recycler24h);
         recyclerView.setHasFixedSize(true);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(layoutManager);
-        HourlyAdapter hourlyAdapter = new HourlyAdapter(listModel,MainActivity.this);
+        HourlyAdapter hourlyAdapter = new HourlyAdapter(listModel, MainActivity.this);
         recyclerView.setAdapter(hourlyAdapter);
     }
 
+    //recycleView cho 5 ngày
     private void initRecycleViewFiveDays() {
         recyclerView = (RecyclerView) findViewById(R.id.recycler5days);
         recyclerView.setHasFixedSize(false);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(layoutManager);
-        Daily5Adapter daily5Adapter = new Daily5Adapter(dailyArrayList,MainActivity.this);
+        Daily5Adapter daily5Adapter = new Daily5Adapter(dailyArrayList, MainActivity.this);
         recyclerView.setAdapter(daily5Adapter);
     }
 
     private void get24hoursData(String key) {
         requestQueue = Volley.newRequestQueue(MainActivity.this);
-        String url = "http://dataservice.accuweather.com/forecasts/v1/hourly/12hour/"+key+"?apikey=jvPR2DbpPfR3aM3gpxiGK2aBFGB9P84x&language=en-us&metric=true";
+        String url = "http://dataservice.accuweather.com/forecasts/v1/hourly/12hour/" + key + "?apikey=kGTDuDorZs1s2xFRoeQZbwX1DcHMfrDn&language=en-us&metric=true";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Log.d("myLog","get data done 24h");
+                        Log.d("myLog", "get data done 24h");
                         try {
 
 
                             JSONArray jsonArray = new JSONArray(response);
-                            for (int i = 0; i<12; i++){
+                            for (int i = 0; i < 12; i++) {
                                 JSONObject inforOneHour = jsonArray.getJSONObject(i);
                                 JSONObject main = inforOneHour.getJSONObject("Temperature");
                                 double temp = main.getDouble("Value");
@@ -359,10 +353,10 @@ public class MainActivity extends AppCompatActivity {
                                 String icon = inforOneHour.getString("WeatherIcon");
 
                                 String date = inforOneHour.getString("DateTime");
-                                String hour=date.substring(11,16);
+                                String hour = date.substring(11, 16);
 
 
-                                OneHourInfo oneHourInfo = new OneHourInfo(tempInt,icon,hour);
+                                OneHourInfo oneHourInfo = new OneHourInfo(tempInt, icon, hour);
 
                                 listModel.add(oneHourInfo);
                             }
@@ -377,26 +371,26 @@ public class MainActivity extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.d("myLog","get data fail 24h"+error);
+                        Log.d("myLog", "get data fail 24h" + error);
                     }
                 });
         requestQueue.add(stringRequest);
     }
 
-    private void getCurrentData(String city){
+    private void getCurrentData(String city) {
 
-        Log.d("myLog","getting data");
+        Log.d("myLog", "getting data");
 
         requestQueue = Volley.newRequestQueue(MainActivity.this);
-        String url = "https://api.openweathermap.org/data/2.5/weather?q="+city+"&units=metric&appid=a294d4f6615e3794f086c469c0258c7b";
+        String url = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&units=metric&appid=a294d4f6615e3794f086c469c0258c7b";
 
-        StringRequest stringRequest= new StringRequest(Request.Method.GET, url,
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Log.d("myLog","getting data: "+response);
+                        Log.d("myLog", "getting data: " + response);
                         try {
-                            JSONObject jsonObject =new JSONObject(response);
+                            JSONObject jsonObject = new JSONObject(response);
 
                             String day = jsonObject.getString("dt");
                             Long l = Long.valueOf(day);
@@ -417,35 +411,46 @@ public class MainActivity extends AppCompatActivity {
 
                             currentState.setText(status);
 
-                            switch (status){
-                                case "Clouds": bgApp.setBackground(ContextCompat.getDrawable(MainActivity.this,R.drawable.cloud)); break;
-                                case "Clear": bgApp.setBackground(ContextCompat.getDrawable(MainActivity.this,R.drawable.clear)); break;
-                                case "Rain": case"Drizzle":bgApp.setBackground(ContextCompat.getDrawable(MainActivity.this,R.drawable.rain)); break;
-                                case "Thunderstorm": bgApp.setBackground(ContextCompat.getDrawable(MainActivity.this,R.drawable.storm)); break;
-                                default:bgApp.setBackground(ContextCompat.getDrawable(MainActivity.this,R.drawable.mist)); break;
+                            switch (status) {
+                                case "Clouds":
+                                    bgApp.setBackground(ContextCompat.getDrawable(MainActivity.this, R.drawable.cloud));
+                                    break;
+                                case "Clear":
+                                    bgApp.setBackground(ContextCompat.getDrawable(MainActivity.this, R.drawable.clear));
+                                    break;
+                                case "Rain":
+                                case "Drizzle":
+                                    bgApp.setBackground(ContextCompat.getDrawable(MainActivity.this, R.drawable.rain));
+                                    break;
+                                case "Thunderstorm":
+                                    bgApp.setBackground(ContextCompat.getDrawable(MainActivity.this, R.drawable.storm));
+                                    break;
+                                default:
+                                    bgApp.setBackground(ContextCompat.getDrawable(MainActivity.this, R.drawable.mist));
+                                    break;
 
                             }
 
                             String icon = jsonObjectWeather.getString("icon");
-                            Log.d("myLog", "onResponse: "+icon);
+                            Log.d("myLog", "onResponse: " + icon);
                             Picasso.with(MainActivity.this).load("https://openweathermap.org/img/w/"
-                                    +icon+".png").into(currentStateIcon);
+                                    + icon + ".png").into(currentStateIcon);
 
                             JSONObject jsonObjectMain = jsonObject.getJSONObject("main");
 
 
                             int temp = jsonObjectMain.getInt("temp");
-                            currentTemp.setText(temp+"°C");
-                            tempInfor.setText(temp+"°C");
+                            currentTemp.setText(temp + "°C");
+                            tempInfor.setText(temp + "°C");
 
                             int pressure = jsonObjectMain.getInt("pressure");
-                            pressureInfor.setText(pressure+" mb");
+                            pressureInfor.setText(pressure + " mb");
 
                             int humidity = jsonObjectMain.getInt("humidity");
-                            humidInfor.setText(humidity+"%");
+                            humidInfor.setText(humidity + "%");
 
                             int visibility = jsonObject.getInt("visibility");
-                            visibleInfor.setText((visibility/1000)+" km");
+                            visibleInfor.setText((visibility / 1000) + " km");
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -456,7 +461,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(MainActivity.this, "Getting data error...", Toast.LENGTH_LONG).show();
-                        Log.d("myLog","getting data error");
+                        Log.d("myLog", "getting data error");
                     }
                 });
         requestQueue.add(stringRequest);
@@ -466,7 +471,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setUVInfor(String locationKey) {
         requestQueue = Volley.newRequestQueue(MainActivity.this);
-        String url = "https://dataservice.accuweather.com/currentconditions/v1/"+locationKey+"?apikey=jvPR2DbpPfR3aM3gpxiGK2aBFGB9P84x&language=en&details=true";
+        String url = "https://dataservice.accuweather.com/currentconditions/v1/" + locationKey + "?apikey=kGTDuDorZs1s2xFRoeQZbwX1DcHMfrDn&language=en&details=true";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
@@ -480,8 +485,8 @@ public class MainActivity extends AppCompatActivity {
                             int dewpoint = (int) Math.round(metric_dewpoint.getDouble("Value"));
                             dew_pointInfor.setText(dewpoint + "°C");
 
-                            double uvIndex= jsonObject.getDouble("UVIndex");
-                            UVInfor.setText(uvIndex+"");
+                            double uvIndex = jsonObject.getDouble("UVIndex");
+                            UVInfor.setText(uvIndex + "");
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -495,21 +500,21 @@ public class MainActivity extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-    private void getLocationKey(String city){
+    private void getLocationKey(String city) {
         requestQueue = Volley.newRequestQueue(MainActivity.this);
-        String url = "http://dataservice.accuweather.com/locations/v1/cities/search?apikey=iWk88SAOPAo4Iz3IwgDIjttJXwGntpPR&q="+city+"&language=en-us&details=true";
+        String url = "http://dataservice.accuweather.com/locations/v1/cities/search?apikey=kGTDuDorZs1s2xFRoeQZbwX1DcHMfrDn&q=" + city + "&language=en-us&details=true";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         try {
                             JSONArray jsonArray = new JSONArray(response);
-                             JSONObject jsonObject = jsonArray.getJSONObject(0);
-                             locationKey=jsonObject.getString("Key");
-                            Log.d("myLog","key"+locationKey);
-                             getFiveDays(locationKey);
-                             get24hoursData(locationKey);
-                             setUVInfor(locationKey);
+                            JSONObject jsonObject = jsonArray.getJSONObject(0);
+                            locationKey = jsonObject.getString("Key");
+                            Log.d("myLog", "key" + locationKey);
+                            getFiveDays(locationKey);
+                            get24hoursData(locationKey);
+                            setUVInfor(locationKey);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -521,84 +526,79 @@ public class MainActivity extends AppCompatActivity {
         });
         requestQueue.add(stringRequest);
     }
-    private void getFiveDays(String locationKey){
 
-            requestQueue = Volley.newRequestQueue(MainActivity.this);
-            String url = "http://dataservice.accuweather.com/forecasts/v1/daily/5day/"+locationKey+"?apikey=jvPR2DbpPfR3aM3gpxiGK2aBFGB9P84x&language=vi-vn&details=true&metric=true";
+    //đọc dữ liệu từ api dự báo 5 ngày
+    private void getFiveDays(String locationKey) {
+        requestQueue = Volley.newRequestQueue(MainActivity.this);
+        //api lấy dữ liệu dự báo thời tiết 5 ngày
+        String url = "http://dataservice.accuweather.com/forecasts/v1/daily/5day/" + locationKey + "?apikey=kGTDuDorZs1s2xFRoeQZbwX1DcHMfrDn&language=vi-vn&details=true&metric=true";
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            //Xử lý file json trả về lấy ra các thông tin cần thiết
+                            JSONObject jsonObject = new JSONObject(response);
+                            JSONArray jsonArrayDaily = jsonObject.getJSONArray("DailyForecasts");
+                            for (int i = 0; i < jsonArrayDaily.length(); i++) {
+                                JSONObject jsonObjectOneday = jsonArrayDaily.getJSONObject(i);
 
-            StringRequest stringRequest= new StringRequest(Request.Method.GET, url,
-                    new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
-                            Toast.makeText(MainActivity.this, "Getting data...", Toast.LENGTH_LONG).show();
-                            Log.d("myLog","getting data"+response);
+                                // lấy ngày tháng
+                                Long ngay = jsonObjectOneday.getLong("EpochDate");
+                                Date date = new Date(ngay * 1000L);
+                                Calendar c = Calendar.getInstance();
+                                c.setTime(date);
+                                c.add(Calendar.DATE, 1);
+                                date = c.getTime();
+                                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("E");
+                                String day = simpleDateFormat.format(date);
 
-                            try {
-                                JSONObject jsonObject=new JSONObject(response);
-                                JSONArray jsonArrayDaily=jsonObject.getJSONArray("DailyForecasts");
-                                for(int i=0;i<jsonArrayDaily.length();i++){
-                                    JSONObject jsonObjectOneday=jsonArrayDaily.getJSONObject(i);
+                                // lấy nhiệt độ max min trong ngày
+                                JSONObject jsonObjectTemp = jsonObjectOneday.getJSONObject("Temperature");
+                                JSONObject jsonObjectMinTemp = jsonObjectTemp.getJSONObject("Minimum");
+                                double minTempa = jsonObjectMinTemp.getDouble("Value");
+                                int minTemp = (int) Math.round(minTempa);
+                                JSONObject jsonObjectMaxTemp = jsonObjectTemp.getJSONObject("Maximum");
+                                double maxTempa = jsonObjectMaxTemp.getDouble("Value");
+                                int maxTemp = (int) Math.round(maxTempa);
 
-                                    // lấy ngày tháng
-                                    Long ngay=jsonObjectOneday.getLong("EpochDate");
-                                    Date date=new Date(ngay*1000L);
-                                    Calendar c = Calendar.getInstance();
-                                    c.setTime(date);
-                                    c.add(Calendar.DATE, 1);
-                                    date = c.getTime();
-                                    SimpleDateFormat simpleDateFormat=new SimpleDateFormat("E");
-                                    String day= simpleDateFormat.format(date);
+                                // lấy icon và mô tả
+                                JSONObject jsonObjectDay = jsonObjectOneday.getJSONObject("Day");
+                                int icon = jsonObjectDay.getInt("Icon");
+                                Log.d("icon", "" + icon);
+                                String des = jsonObjectDay.getString("PrecipitationProbability");
+                                des += " %";
 
-
-                                    // lấy nhiệt độ max min trong ngày
-                                    JSONObject jsonObjectTemp=jsonObjectOneday.getJSONObject("Temperature");
-                                    JSONObject jsonObjectMinTemp=jsonObjectTemp.getJSONObject("Minimum");
-                                    double minTempa=jsonObjectMinTemp.getDouble("Value");
-                                    int minTemp=(int)Math.round(minTempa);
-                                    JSONObject jsonObjectMaxTemp=jsonObjectTemp.getJSONObject("Maximum");
-                                    double maxTempa=jsonObjectMaxTemp.getDouble("Value");
-                                    int maxTemp=(int)Math.round(maxTempa);
-
-                                    // lấy icon và mô tả
-                                    JSONObject jsonObjectDay=jsonObjectOneday.getJSONObject("Day");
-                                    int icon=jsonObjectDay.getInt("Icon");
-                                    Log.d("icon",""+icon);
-                                    String des=jsonObjectDay.getString("PrecipitationProbability");
-                                    des+=" %";
-
-                                    Daily daily=new Daily(day,minTemp,maxTemp,icon,des);
-                                    Log.d("myLog","daily "+daily.toString());
-
-                                    dailyArrayList.add(daily);
-
-                                }
-
-                                int temp_min = dailyArrayList.get(0).minTemp;
-                                int temp_max = dailyArrayList.get(0).maxTemp;
-                                minTemp.setText(temp_min+"°");
-                                 maxTemp.setText(temp_max+"°");
-
-                                initRecycleViewFiveDays();
-                                setChart(dailyArrayList);
-
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+                                //khởi tạo đối tượng daily
+                                Daily daily = new Daily(day, minTemp, maxTemp, icon, des);
+                                //thêm đối tượng vào dailyArrayList
+                                dailyArrayList.add(daily);
                             }
-
+                            int temp_min = dailyArrayList.get(0).minTemp;
+                            int temp_max = dailyArrayList.get(0).maxTemp;
+                            minTemp.setText(temp_min + "°");
+                            maxTemp.setText(temp_max + "°");
+                            //tạo ra giao diện 5 ngày liên tiếp
+                            initRecycleViewFiveDays();
+                            //vẽ biểu đồ linechart cho nhiệt độ min max 5 ngày
+                            setChart(dailyArrayList);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            Toast.makeText(MainActivity.this, "Getting data error...", Toast.LENGTH_LONG).show();
-                        }
-                    });
-            requestQueue.add(stringRequest);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(MainActivity.this, "Getting data error...", Toast.LENGTH_LONG).show();
+                    }
+                });
+        requestQueue.add(stringRequest);
     }
 
-    private void getIndexAir(String city){
+    private void getIndexAir(String city) {
         requestQueue = Volley.newRequestQueue(MainActivity.this);
-        String url = "https://api.weatherbit.io/v2.0/current/airquality?city="+city+"&key=d629fbdd82ca403899f2eb5fe13ce92f";
+        String url = "https://api.weatherbit.io/v2.0/current/airquality?city=" + city + "&key=d629fbdd82ca403899f2eb5fe13ce92f";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
@@ -606,32 +606,34 @@ public class MainActivity extends AppCompatActivity {
                         try {
                             JSONObject jsonObjectAir = new JSONObject(response);
                             JSONArray jsonObjectIndex = jsonObjectAir.getJSONArray("data");
-                           JSONObject jsonObject=jsonObjectIndex.getJSONObject(0);
+                            JSONObject jsonObject = jsonObjectIndex.getJSONObject(0);
 
-                            String aqiindex1=jsonObject.getString("aqi");
-                            Log.d("aqi","aqi"+aqiindex1);
+                            //lấy ra chỉ số không khí
+                            String aqiindex1 = jsonObject.getString("aqi");
                             aqi.setText(aqiindex1);
-                            if(!aqiindex1.equals("-")) {
+                            //gán chuỗi mô tả tổng quan và chi tiết dựa vào cách chia của tổ chức aqicn.org
+                            if (!aqiindex1.equals("-")) {
                                 int aqiindex = Integer.parseInt(aqiindex1);
-                                determinateBar.setProgress(aqiindex/5);
+                                //đặt chỉ số cho progress bar
+                                determinateBar.setProgress(aqiindex / 5);
                                 if (aqiindex <= 50) {
-                                    shortphase.setText("Tốt");
-                                    longphase.setText("Chất lượng không khí đạt tiêu chuẩn");
+                                    shortphase.setText("Good");
+                                    longphase.setText("Air quality is considered satisfactory, and air pollution poses little or no risk");
                                 } else if (aqiindex <= 100) {
-                                    shortphase.setText("Vừa phải");
-                                    longphase.setText("Chất lượng không khí ở mức chấp nhận được");
+                                    shortphase.setText("Moderate");
+                                    longphase.setText("Air quality is acceptable; however, for some pollutants there may be a moderate health concern for a very small number of people who are unusually sensitive to air pollution");
                                 } else if (aqiindex <= 150) {
-                                    shortphase.setText("Không tốt cho người nhạy cảm");
-                                    longphase.setText("Nhóm người nhạy cảm có thể chịu ảnh hưởng sức khỏe");
+                                    shortphase.setText("Unhealthy for Sensitive Groups");
+                                    longphase.setText("Members of sensitive groups may experience health effects. The general public is not likely to be affected.");
                                 } else if (aqiindex <= 200) {
-                                    shortphase.setText("Có hại cho sức khỏe");
-                                    longphase.setText("Mọi người đều chịu tác động đến sức khỏe, nghiêm trọng hơn là nhóm người nhạy cảm");
+                                    shortphase.setText("Unhealthy");
+                                    longphase.setText("Everyone may begin to experience health effects; members of sensitive groups may experience more serious health effects");
                                 } else if (aqiindex <= 300) {
-                                    shortphase.setText("Rất có hại cho sức khỏe");
-                                    longphase.setText("Cảnh báo nguy hại sức khỏe nghiêm trọng, tất cả mọi người đều chịu ảnh hưởng");
+                                    shortphase.setText("Very Unhealthy");
+                                    longphase.setText("Health warnings of emergency conditions. The entire population is more likely to be affected");
                                 } else {
-                                    shortphase.setText("Cực kỳ nguy hiểm");
-                                    longphase.setText("Cảnh báo nguy hại nghiêm trọng đến sức khỏe tất cả mọi người");
+                                    shortphase.setText("Hazardous");
+                                    longphase.setText("Health alert: everyone may experience more serious health effects");
                                 }
                             }
                         } catch (JSONException e) {
@@ -646,60 +648,60 @@ public class MainActivity extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-    private void anhXa(){
+    private void anhXa() {
         currentTemp = (TextView) findViewById(R.id.currentTemp);
         maxTemp = (TextView) findViewById(R.id.maxTemp);
-        minTemp  = findViewById(R.id.minTemp);
-        currentStateIcon  = (ImageView) findViewById(R.id.currentStateIcon);
-        currentDate  = (TextView) findViewById(R.id.currentDate);
-        currentCity  = (TextView) findViewById(R.id.currentCity);
-        currentState  = (TextView) findViewById(R.id.currentState);
-        tempInfor  = (TextView) findViewById(R.id.tempInfor);
-        humidInfor  = (TextView) findViewById(R.id.humidInfor);
-        UVInfor  = (TextView) findViewById(R.id.UVInfor);
-        visibleInfor  = (TextView) findViewById(R.id.visibleInfor);
-        dew_pointInfor  = (TextView) findViewById(R.id.dew_pointInfor);
-        pressureInfor  = (TextView) findViewById(R.id.pressureInfor);
-        aqi=(TextView)findViewById(R.id.aqi);
-        shortphase=(TextView)findViewById(R.id.shortphase);
-        longphase=(TextView)findViewById(R.id.longphase);
-        determinateBar=(ProgressBar)findViewById(R.id.determinateBar);
-        list10days=(ImageButton)findViewById(R.id.list10days);
-        bgApp=findViewById(R.id.bgApp);
+        minTemp = findViewById(R.id.minTemp);
+        currentStateIcon = (ImageView) findViewById(R.id.currentStateIcon);
+        currentDate = (TextView) findViewById(R.id.currentDate);
+        currentCity = (TextView) findViewById(R.id.currentCity);
+        currentState = (TextView) findViewById(R.id.currentState);
+        tempInfor = (TextView) findViewById(R.id.tempInfor);
+        humidInfor = (TextView) findViewById(R.id.humidInfor);
+        UVInfor = (TextView) findViewById(R.id.UVInfor);
+        visibleInfor = (TextView) findViewById(R.id.visibleInfor);
+        dew_pointInfor = (TextView) findViewById(R.id.dew_pointInfor);
+        pressureInfor = (TextView) findViewById(R.id.pressureInfor);
+        aqi = (TextView) findViewById(R.id.aqi);
+        shortphase = (TextView) findViewById(R.id.shortphase);
+        longphase = (TextView) findViewById(R.id.longphase);
+        determinateBar = (ProgressBar) findViewById(R.id.determinateBar);
+        list10days = (ImageButton) findViewById(R.id.list10days);
+        bgApp = findViewById(R.id.bgApp);
 
 
 //        LayoutInflater inflater=getLayoutInflater();
 //        View custombar=inflater.inflate(R.layout.custom_action_bar,null);
-        cityBar=view.findViewById(R.id.cityBar);
-        search=view.findViewById(R.id.search);
+        cityBar = view.findViewById(R.id.cityBar);
+        search = view.findViewById(R.id.search);
 
         listModel = new ArrayList<>();
-        dailyArrayList=new ArrayList<>();
+        dailyArrayList = new ArrayList<>();
 
     }
 
-    private ArrayList<Entry> dataValues1(ArrayList<Daily> dailyArrayList){
-        ArrayList<Entry> dataVals=new ArrayList<Entry>();
-        for(int i=0;i<dailyArrayList.size();i++){
-            dataVals.add(new Entry(i,dailyArrayList.get(i).getMinTemp()));
+    private ArrayList<Entry> dataValues1(ArrayList<Daily> dailyArrayList) {
+        ArrayList<Entry> dataVals = new ArrayList<Entry>();
+        for (int i = 0; i < dailyArrayList.size(); i++) {
+            dataVals.add(new Entry(i, dailyArrayList.get(i).getMinTemp()));
         }
 
         return dataVals;
     }
 
-    private ArrayList<Entry> dataValues2(ArrayList<Daily> dailyArrayList){
-        ArrayList<Entry> dataVals=new ArrayList<Entry>();
-        for(int i=0;i<dailyArrayList.size();i++){
-            dataVals.add(new Entry(i,dailyArrayList.get(i).getMaxTemp()));
+    private ArrayList<Entry> dataValues2(ArrayList<Daily> dailyArrayList) {
+        ArrayList<Entry> dataVals = new ArrayList<Entry>();
+        for (int i = 0; i < dailyArrayList.size(); i++) {
+            dataVals.add(new Entry(i, dailyArrayList.get(i).getMaxTemp()));
         }
 
         return dataVals;
     }
 
-    private  class MyValueFormat implements IValueFormatter{
+    private class MyValueFormat implements IValueFormatter {
         @Override
         public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
-            return (int)value+" °C";
+            return (int) value + " °C";
         }
     }
 

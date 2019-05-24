@@ -144,11 +144,12 @@
                 android:layout_marginBottom="8dp"
                 android:scrollbars="none" />
 
+            //Giao diện cho phần dự báo 5 ngày
             <LinearLayout
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -160,21 +161,21 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="NEXT 5 DAYS"
+                        android:textColor="@color/black"
                         android:textSize="16dp"
-                        android:textStyle="bold"
-                        android:textColor="@color/black"/>
+                        android:textStyle="bold"/>
 
+                    //Button để chuyển sang giao diện dự báo 10 ngày
                     <ImageButton
-                        android:background="@null"
                         android:id="@+id/list10days"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="235dp"
-                        android:src="@drawable/ic_play_circle_outline_black_24dp"
-
-                        />
+                        android:background="@null"
+                        android:src="@drawable/ic_play_circle_outline_black_24dp"/>
                 </LinearLayout>
 
+                //Giao diện biểu đồ
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="200dp">
@@ -184,22 +185,16 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginLeft="10dp"
-                        android:layout_marginRight="5dp" />
+                        android:layout_marginRight="5dp"/>
                 </LinearLayout>
 
-                <!--<TableLayout-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content">-->
-                    <!--<TableRow>-->
-                        <android.support.v7.widget.RecyclerView
-                            android:id="@+id/recycler5days"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_marginBottom="4dp"
-                            android:scrollbars="none" />
-                    <!--</TableRow>-->
-                <!--</TableLayout>-->
-
+                //Giao diện phần RecycleView
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler5days"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="4dp"
+                    android:scrollbars="none"/>
             </LinearLayout>
 
             <TextView
@@ -208,7 +203,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="chi tiết"
+                android:text="detail"
                 android:textAllCaps="true"
                 android:textSize="18dp"
                 android:textStyle="bold"
@@ -432,25 +427,27 @@
             </TableLayout>
 
             <LinearLayout
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:orientation="vertical">
 
+                <!--tiêu đề-->
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Chỉ số không khí"
+                    android:text="AIR QUALITY INDEX"
+                    android:textColor="@color/black"
                     android:textSize="18dp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"/>
+                    android:textStyle="bold" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
+                    <!--chỉ số không khí-->
                     <TextView
                         android:id="@+id/aqi"
                         android:layout_width="wrap_content"
@@ -459,8 +456,8 @@
                         android:gravity="center_horizontal"
 
                         android:text="No data"
-                        android:textSize="50dp"
-                        android:textColor="@color/black"/>
+                        android:textColor="@color/black"
+                        android:textSize="50dp" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -469,14 +466,16 @@
                         android:layout_marginLeft="10dp"
                         android:orientation="vertical">
 
+                        <!--mô tả chung-->
                         <TextView
                             android:id="@+id/shortphase"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="No data"
-                            android:textSize="20dp"
-                            android:textColor="@color/black"/>
+                            android:textColor="@color/black"
+                            android:textSize="20dp" />
 
+                        <!--cảnh báo chi tiết-->
                         <TextView
                             android:id="@+id/longphase"
                             android:layout_width="match_parent"
@@ -489,6 +488,7 @@
 
                 </LinearLayout>
 
+                //progressBar thể hiện
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
