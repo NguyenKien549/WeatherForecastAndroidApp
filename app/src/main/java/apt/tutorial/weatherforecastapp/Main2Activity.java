@@ -28,6 +28,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class Main2Activity extends AppCompatActivity {
+    //image trở về màn hình chính
     ImageView imgBack;
     ListView lv;
     Daily10Adapter daily10Adapter;
@@ -37,7 +38,7 @@ public class Main2Activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
-
+        //tìm các đối tượng view
         anhXa();
         //lấy tên thành phố truyền vào
         Intent intent = getIntent();
@@ -52,6 +53,7 @@ public class Main2Activity extends AppCompatActivity {
         });
     }
 
+    //khởi tạo các đối tượng view và adapter
     private void anhXa() {
         imgBack = (ImageView) findViewById(R.id.image_back);
         lv = (ListView) findViewById(R.id.listview10days);
@@ -95,11 +97,16 @@ public class Main2Activity extends AppCompatActivity {
                                 String icon = jsonWeather.getString("icon");
 
                                 // lấy mô tả
-                                String description = jsonWeather.getString("description");// mô tả chung
-                                String pop = jsonObjectOneday.getString("pop"); //khả năng mưa
-                                String precip = jsonObjectOneday.getString("precip"); //lượng mưa
-                                String clouds = jsonObjectOneday.getString("clouds"); //độ che phủ mây
-                                double uv = jsonObjectOneday.getDouble("uv"); //chỉ số uv
+                                // mô tả chung
+                                String description = jsonWeather.getString("description");
+                                //khả năng mưa
+                                String pop = jsonObjectOneday.getString("pop");
+                                //lượng mưa
+                                String precip = jsonObjectOneday.getString("precip");
+                                //độ che phủ mây
+                                String clouds = jsonObjectOneday.getString("clouds");
+                                //chỉ số uv
+                                double uv = jsonObjectOneday.getDouble("uv");
                                 String uv2 = String.format("%.2f", uv);
 
                                 String des = description + "\n" + "Probability of precipitation: " + pop + " %, average total cloud coverage: " + clouds + " %"  + ", UV index: " + uv2;

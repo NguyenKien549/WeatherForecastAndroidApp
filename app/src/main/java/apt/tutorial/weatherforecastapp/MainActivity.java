@@ -271,14 +271,17 @@ public class MainActivity extends AppCompatActivity {
 
         mpLineChart = (LineChart) findViewById(R.id.line_chart);
 
+        // đường nhiệt độ min
         LineDataSet lineDataSet1 = new LineDataSet(dataValues1(dailyArrayList), "");
         lineDataSet1.setValueTextSize(12);
+        // đường nhiệt độ max
         LineDataSet lineDataSet2 = new LineDataSet(dataValues2(dailyArrayList), "");
         lineDataSet2.setValueTextSize(12);
         ArrayList<ILineDataSet> dataSets = new ArrayList<>();
         dataSets.add(lineDataSet1);
         dataSets.add(lineDataSet2);
 
+        //tạo giao diện cho biểu đồ
         mpLineChart.setDrawGridBackground(false);
         mpLineChart.setDrawBorders(false);
         mpLineChart.getAxisLeft().setDrawGridLines(false);
@@ -323,10 +326,13 @@ public class MainActivity extends AppCompatActivity {
 
     //recycleView cho 5 ngày
     private void initRecycleViewFiveDays() {
+        // kết nối biến và thành phần trong màn hình
         recyclerView = (RecyclerView) findViewById(R.id.recycler5days);
         recyclerView.setHasFixedSize(false);
+        //Tùy biến Layout theo chiều ngang dọc
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(layoutManager);
+        //gán biến chứa RecycleView với Adapter và danh sách đối tượng dữ liệu
         Daily5Adapter daily5Adapter = new Daily5Adapter(dailyArrayList, MainActivity.this);
         recyclerView.setAdapter(daily5Adapter);
     }
@@ -535,6 +541,7 @@ public class MainActivity extends AppCompatActivity {
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
+                    //có dữ liệu trả về
                     public void onResponse(String response) {
                         try {
                             //Xử lý file json trả về lấy ra các thông tin cần thiết
@@ -588,6 +595,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 },
                 new Response.ErrorListener() {
+                    //có lỗi xảy ra
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(MainActivity.this, "Getting data error...", Toast.LENGTH_LONG).show();
@@ -616,6 +624,7 @@ public class MainActivity extends AppCompatActivity {
                                 int aqiindex = Integer.parseInt(aqiindex1);
                                 //đặt chỉ số cho progress bar
                                 determinateBar.setProgress(aqiindex / 5);
+                                //đặt mô tả chỉ số chất lượng không khí
                                 if (aqiindex <= 50) {
                                     shortphase.setText("Good");
                                     longphase.setText("Air quality is considered satisfactory, and air pollution poses little or no risk");
